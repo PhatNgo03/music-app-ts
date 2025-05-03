@@ -6,10 +6,10 @@ export const topics = async (req: Request, res: Response) => {
   try {
     const topics = await Topic.find({ deleted: false });
 
-    console.log("Fetched topics:", topics);
 
     res.render("client/pages/topics/index", {
-      pageTitle: "Chủ đề bài hát"
+      pageTitle: "Chủ đề bài hát ",
+      topics: topics
     });
   } catch (error) {
     res.status(500).send("Server error");
