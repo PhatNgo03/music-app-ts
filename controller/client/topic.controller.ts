@@ -8,9 +8,10 @@ export const topics = async (req: Request, res: Response) => {
 
     console.log("Fetched topics:", topics);
 
-    res.render("client/pages/topics/index");
+    res.render("client/pages/topics/index", {
+      pageTitle: "Chủ đề bài hát"
+    });
   } catch (error) {
-    console.error("Error fetching topics:", error);
     res.status(500).send("Server error");
   }
 };
