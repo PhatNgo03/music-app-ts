@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "ES6",
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "outDir": "dist",
+    "rootDir": "./",
+    "typeRoots": ["./node_modules/@types", "./types"],
+    "strict": true,
+    "esModuleInterop": true, //Dùng được từ khóa import thay cho require,
+    "removeComments": true, //Xóa comment khi biên dịch sang file js
+  },
+  "include": ["**/*.ts"],
+  "exclude": ["node_modules"]
+}
