@@ -17,6 +17,8 @@ app.set("view engine", "pug");
 clientRoutes(app);
 //End Client routes
 
+app.use(express.static(`${__dirname}/public`));
+
 app.listen(port, () => {
   console.log(`App listening on port ${port}`);
 });
