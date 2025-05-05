@@ -140,6 +140,22 @@
 .singer-detail .inner-actions .inner-like.active i {
   font-weight: 900;
 }
+   /*favorite and unfavorite */
+.singer-detail .inner-actions .inner-heart {
+  cursor: pointer;
+}
+.singer-detail .inner-actions .inner-heart i {
+  color: #b90000;
+}
+
+.singer-detail .inner-actions .inner-heart.active{
+  cursor: pointer;
+  color: #b90000;
+}
+.singer-detail .inner-actions .inner-heart.active i {
+  font-weight: 900;
+}
+ 
 .singer-detail .inner-action {
   display: flex;
   align-items: center;
