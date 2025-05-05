@@ -3,7 +3,7 @@ import Topic from "../../models/topic.model";
 import Song from "../../models/song.model";
 import Singer from "../../models/singer.model";
 
-// [GET] /songs/:slugRTopic
+// [GET] /songs/:slugTopic
 export const list = async (req: Request, res: Response) => {
   try {
     // Lấy ra thông tin của chủ đề bài hát
@@ -65,6 +65,39 @@ export const detail = async (req: Request, res: Response) => {
       singer,
       topic
     });
+  } catch (error) {
+    res.status(500).send("Server error");
+  }
+};
+
+
+
+// [patch] /songs/like/:typeLike/:idSong
+export const like = async (req: Request, res: Response) => {
+  try {
+    const idSong: string = req.params.idSong;
+    const typeLike: string = req.params.typeLike;
+    const song = await Song.findOne({
+      _id: idSong,
+      status: "active",
+      deleted : false
+    });
+
+    const newLike: number = typeLike === "like" ? (song?.like ?? 0) + 1 : (song?.like ?? 0) - 1;
+    await Song.updateOne(
+      {
+        _id: idSong,
+      },
+      {
+        like: newLike
+      }
+    );
+    // like :["id_user_1", "id_user_2"] //update when login account
+    res.json({
+      code: 200,
+      message: "Like thành công!",
+      like: newLike
+    })
   } catch (error) {
     res.status(500).send("Server error");
   }

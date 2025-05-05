@@ -125,7 +125,21 @@
   color: #666;
   margin-bottom: 20px;
 }
+  /*like and dislike */
+.singer-detail .inner-actions .inner-like {
+  cursor: pointer;
+}
+.singer-detail .inner-actions .inner-like i {
+  color: #0059ff;
+}
 
+.singer-detail .inner-actions .inner-like.active{
+  cursor: pointer;
+  color: #0059ff;
+}
+.singer-detail .inner-actions .inner-like.active i {
+  font-weight: 900;
+}
 .singer-detail .inner-action {
   display: flex;
   align-items: center;
