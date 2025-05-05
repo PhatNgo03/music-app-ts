@@ -36,3 +36,36 @@ export const list = async (req: Request, res: Response) => {
     res.status(500).send("Server error");
   }
 };
+
+
+// [GET] /songs/:slugSong
+export const detail = async (req: Request, res: Response) => {
+  try {
+    const slugSong: string = req.params.slugSong;
+
+    const song = await Song.findOne({
+      slug: slugSong,
+      status: "active",
+      deleted: false
+    }).select("title audio avatar singerId topicId description like lyrics");
+
+    const singer = await Singer.findOne({
+      _id: song?.singerId,
+      deleted: false
+    }).select("fullName avatar slug");
+
+    const topic = await Topic.findOne({
+      _id: song?.topicId,
+      deleted: false
+    }).select("title avatar description slug");
+
+    res.render("client/pages/songs/detail", {
+      pageTitle: "Chi tiết bài hát",
+      song,
+      singer,
+      topic
+    });
+  } catch (error) {
+    res.status(500).send("Server error");
+  }
+};

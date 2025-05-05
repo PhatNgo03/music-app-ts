@@ -43,8 +43,6 @@
   text-align: center;
   padding: 10px;
 }
-
-
 /* End Footer*/
 
 /* box head*/
@@ -109,3 +107,90 @@
 }
 
 /* End Song item */
+
+/* Phần tiêu đề bài hát */
+.singer-detail .inner-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #f57f20;
+  margin-bottom: 15px;
+}
+
+/* Các icon hành động dưới tiêu đề */
+.singer-detail .inner-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-size: 18px;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.singer-detail .inner-action {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* Phần phát nhạc (ảnh + audio) */
+.singer-detail .inner-play {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+.inner-avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 4px solid #f57f20;
+  animation: rotate 5s linear infinite;
+  /* animation-play-state: paused; */
+  margin-right: 20px;
+}
+
+.inner-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Mô tả và lời bài hát */
+.singer-detail .song-description,
+.singer-detail .song-lyrics {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 15px;
+  margin-bottom: 20px;
+}
+
+.singer-detail .song-description h5,
+.singer-detail .song-lyrics h5 {
+  font-size: 16px;
+  font-weight: 700;
+  color: #f57f20;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 8px;
+}
+
+.singer-detail .song-description p,
+.singer-detail .song-lyrics pre {
+  font-size: 14px;
+  margin: 0;
+  color: #333;
+  white-space: pre-wrap;
+}
