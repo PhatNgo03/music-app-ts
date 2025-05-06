@@ -95,6 +95,7 @@
   text-decoration: none;
 }
 
+
 .song-item .inner-content .inner-singer,
 .song-item .inner-content .inner-like,
 .song-item .inner-content .inner-time {
@@ -106,6 +107,15 @@
   margin-bottom: 4px;
 }
 
+.song-item .inner-content .inner-heart.active {
+  cursor: pointer;
+  color: #b90000
+  
+}
+
+.song-item .inner-content .inner-heart.active i{
+  font-weight: 900;
+}
 /* End Song item */
 
 /* Phần tiêu đề bài hát */
@@ -224,3 +234,26 @@
   color: #333;
   white-space: pre-wrap;
 }
+
+/* icon color header */
+a.icon-link {
+  color: #007bff !important;
+  text-decoration: none;
+  font-size: 22px;
+}
+
+.icon-home {
+  color: #007bff; 
+}
+
+.icon-music {
+  color: #007bff; 
+}
+
+.icon-favorite {
+  color: #007bff; 
+}
+
+
+
+/* end icon color header */

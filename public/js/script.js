@@ -66,27 +66,52 @@ if(buttonLike){
 //End button like
 
 //Button Favorite
-const buttonFavorite = document.querySelector("[button-favorite]");
-if(buttonFavorite){
-  buttonFavorite.addEventListener("click",  ()=> {
-    const idSong = buttonFavorite.getAttribute("button-favorite");
+// const buttonFavorite = document.querySelector("[button-favorite]");
+// if(buttonFavorite){
+//   buttonFavorite.addEventListener("click",  ()=> {
+//     const idSong = buttonFavorite.getAttribute("button-favorite");
 
-    const isActive = buttonFavorite.classList.contains("active");
+//     const isActive = buttonFavorite.classList.contains("active");
 
-    const typeFavorite = isActive ? "unfavorite" : "favorite";
+//     const typeFavorite = isActive ? "unfavorite" : "favorite";
 
-    const link = `/songs/favorite/${typeFavorite}/${idSong}`;
+//     const link = `/songs/favorite/${typeFavorite}/${idSong}`;
 
-    const option = {
-      method: "PATCH"
-    }
-    fetch(link, option)
-      .then(res => res.json())
-      .then(data => {
-        if(data.code == 200){
-          buttonFavorite.classList.toggle("active");
-        }
-      });
+//     const option = {
+//       method: "PATCH"
+//     }
+//     fetch(link, option)
+//       .then(res => res.json())
+//       .then(data => {
+//         if(data.code == 200){
+//           buttonFavorite.classList.toggle("active");
+//         }
+//       });
+//   });
+// }
+const listButtonFavorites = document.querySelectorAll("[button-favorite]");
+if(listButtonFavorites.length > 0) {
+  listButtonFavorites.forEach(button => {
+    button.addEventListener("click", () => {
+      const idSong = button.getAttribute("button-favorite");
+      const isActive = button.classList.contains("active");
+      const typeFavorite = isActive ? "unfavorite" : "favorite";
+      const link = `/songs/favorite/${typeFavorite}/${idSong}`;
+  
+      const option = {
+        method: "PATCH"
+      };
+  
+      fetch(link, option)
+        .then(res => res.json())
+        .then(data => {
+          if(data.code == 200){
+            button.classList.toggle("active");
+          }
+        });
+    });
   });
 }
+
+
 //End button like
