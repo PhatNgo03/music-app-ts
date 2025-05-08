@@ -4,7 +4,7 @@ dotenv.config();
 import * as database from "./config/database";
 database.connect();
 
-import clientRoutes from "./routes/index.route";
+import clientRoutes from "./routes/client/index.route";
 
 const app: Express = express();
 

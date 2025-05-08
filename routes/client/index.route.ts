@@ -1,8 +1,8 @@
 import { Express } from "express";
-import { topicRoutes } from "./topic.route";
-import { songRoutes } from "./song.route";
+import { topicRoutes } from "../client/topic.route";
+import { songRoutes } from "../client/song.route";
 import { favoriteSongRoutes } from "./favorite-song.route";
-import { searchRoutes } from "./search.route";
+import { searchRoutes } from "../client/search.route";
 
 const clientRoutes = (app: Express): void => {
   
