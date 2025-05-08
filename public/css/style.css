@@ -94,6 +94,25 @@
 .song-item .inner-title a {
   text-decoration: none;
 }
+.singer-detail .inner-action i {
+  font-size: 16px;
+  color: #444;
+}
+.singer-detail .inner-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin: 10px 0;
+}
+
+.singer-detail .inner-action {
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  color: #333;
+  gap: 6px;
+}
 
 
 .song-item .inner-content .inner-singer,
@@ -271,7 +290,7 @@ a.icon-link {
   max-height: 400px;
   overflow-y: auto;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  display: none
+  display: none;
 }
 
 .box-search .inner-suggest.show {
