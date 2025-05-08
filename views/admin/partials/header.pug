@@ -1,0 +1,16 @@
+.header 
+    .container-fluid 
+        .row.align-items-center 
+            .col-3 
+                .inner-logo 
+                    a(href=`${prefixAdmin}/dashboard`) ADMIN
+            .col-6
+            .col-3.d-flex.justify-content-end
+                a(
+                    href=`${prefixAdmin}/my-account`
+                    class= "btn btn-primary btn-sm mx-2"
+                ) Le Van A
+                a(
+                    href=`${prefixAdmin}/auth/logout`
+                    class="btn btn-danger btn-sm"
+                ) Đăng xuất

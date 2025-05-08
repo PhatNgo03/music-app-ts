@@ -3,9 +3,10 @@ import dotenv from 'dotenv';
 dotenv.config();
 import * as database from "./config/database";
 database.connect();
-
+import path from "path";
 import clientRoutes from "./routes/client/index.route";
-
+import adminRoutes from "./routes/admin/index.route";
+import { systemConfig } from "./config/config";
 const app: Express = express();
 
 const port : number | string = process.env.PORT || 3000;
@@ -13,9 +14,18 @@ const port : number | string = process.env.PORT || 3000;
 app.set("views", "./views");
 app.set("view engine", "pug");
 
+//TinyMCE
+app.use('/tinymce', express.static(path.join(__dirname, 'node_modules', 'tinymce')));
+
+//App local variables
+app.locals.prefixAdmin = systemConfig.prefixAdmin;
+
 //Client routes
 clientRoutes(app);
 //End Client routes
+
+//Admin routes
+adminRoutes(app);
 
 app.use(express.static(`${__dirname}/public`));
 
