@@ -1,0 +1,105 @@
+extends ../../layouts/default.pug
+include ../../mixins/select-tree.pug
+
+
+block main
+  h1(class="mb-4") Thêm mới chủ đề bài hát
+
+  form(
+    action=`/${prefixAdmin}/topics/create`
+    method="POST"
+    enctype="multipart/form-data"
+  )
+
+    div(class="form-group mb-3") 
+      label(for="title") Tiêu đề 
+      input(
+        type="text"
+        class="form-control"
+        id="title"
+        name="title"
+      )
+    div(class="form-group mb-3") 
+      label(for="parent_id" class="form-label mb-2") Danh mục cha
+      select(
+        name="parent_id"
+        id="parent_id"
+        class="form-control form-select mb-3"
+      )
+        option(value="") -- Chọn danh mục cha --
+        if(records)
+          +select-tree(records)
+
+    div(class="form-group mb-3") 
+        label(for="desc") Mô tả
+        textarea(
+          class="form-control textarea-mce"
+          id="desc"
+          name="description"
+          rows="5"
+        )   
+    div.form-group.mb-3(upload-image)
+      label(for="avatar") Ảnh
+      div.custom-file
+        label(for="avatar" class="btn btn-secondary") Chọn tệp
+        input(
+          type="file"
+          class="form-control-file"
+          id="avatar"
+          name="avatar"
+          accept="image/*"
+          upload-image-input
+          style="display: none;"
+        )
+        div(
+          class="image-preview-container"
+        )
+          img(
+            src=""
+            upload-image-preview
+            class="image-preview"
+            style="display: none;"
+          )
+          button.upload-image-remove(
+            upload-image-remove
+            type="button"
+            style="display: none;"
+          ) X
+
+    div(class="form-group mb-3")
+      label(for="position") Vị trí
+      input(
+        type="number"
+        class="form-control"
+        id="position"
+        name="position"
+        placeholder="Tự động tăng"
+        min="1"
+      )  
+  
+    div(class="form-group form-check form-check-inline mb-3")
+        input(
+          type="radio"
+          class="form-check-input"
+          id="statusActive"
+          name="status"
+          value="active"
+          checked
+        ) 
+        label(for="statusActive" class="form-check-label") Hoạt động
+    div(class="form-group form-check form-check-inline mb-3")
+        input(
+          type="radio"
+          class="form-check-input"
+          id="statusInActive"
+          name="status"
+          value="inactive"
+        ) 
+        label(for="statusInActive" class="form-check-label") Dừng Hoạt động
+          
+    div(class="form-group mb-3")
+      button(
+        type="submit"
+        class="btn btn-primary"
+      ) Tạo mới
+  script(src="/admin/js/topic.js")

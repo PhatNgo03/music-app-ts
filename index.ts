@@ -5,6 +5,7 @@ import * as database from "./config/database";
 database.connect();
 import path from "path";
 import clientRoutes from "./routes/client/index.route";
+import bodyParser from "body-parser";
 import adminRoutes from "./routes/admin/index.route";
 import { systemConfig } from "./config/config";
 const app: Express = express();
@@ -20,6 +21,8 @@ app.use('/tinymce', express.static(path.join(__dirname, 'node_modules', 'tinymce
 //App local variables
 app.locals.prefixAdmin = systemConfig.prefixAdmin;
 
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }))
 //Client routes
 clientRoutes(app);
 //End Client routes
