@@ -6,6 +6,7 @@ database.connect();
 import path from "path";
 import clientRoutes from "./routes/client/index.route";
 import bodyParser from "body-parser";
+import methodOverride from "method-override";
 import adminRoutes from "./routes/admin/index.route";
 import { systemConfig } from "./config/config";
 const app: Express = express();
@@ -23,6 +24,8 @@ app.locals.prefixAdmin = systemConfig.prefixAdmin;
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
+
+app.use(methodOverride("_method"));
 //Client routes
 clientRoutes(app);
 //End Client routes
@@ -35,3 +38,4 @@ app.use(express.static(`${__dirname}/public`));
 app.listen(port, () => {
   console.log(`App listening on port ${port}`);
 });
+

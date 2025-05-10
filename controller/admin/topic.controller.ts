@@ -111,3 +111,62 @@ export const createPost =  async(req: Request, res: Response) => {
     res.redirect(`/${systemConfig.prefixAdmin}/topics`);
 
 }
+
+
+
+// [PATCH] /admin/products/change-status/:status/:id
+export const changeStatus = async (req: Request, res: Response) => {
+  // console.log(req.params);
+  const status = req.params.status;
+  const id = req.params.id;
+
+  await Topic.updateOne({ _id : id }, {
+    status : status,
+  });
+
+  res.redirect("back");
+}
+
+// [PATCH] /admin/products/change-multi
+export const changeMulti = async (req: Request, res: Response) => {
+  const type = req.body.type;
+  const ids = req.body.ids.split(", ");
+  console.log("IDs received:", req.body.ids);
+  switch(type){
+    case "active":
+      await Topic.updateMany({_id : {$in: ids}}, {
+        status: "active",
+       });
+      break;
+    
+    case "inactive":
+      await Topic.updateMany({_id : {$in: ids}}, {
+        status: "inactive",
+      });
+      break
+
+    case "delete-all":
+    await Topic.updateMany(
+      {
+        _id : {$in: ids}
+      },
+      {
+        deleted: true,
+      });
+    break;
+
+    case "change-position":
+      for(const item of ids){
+        let[id, position] = item.split("-");
+        position = parseInt(position);
+        await Topic.updateOne({ _id: id}, {
+          position : position,
+        });
+      }
+      break
+    default:
+      break;
+  }
+  
+  res.redirect(`/admin/topics`);
+}

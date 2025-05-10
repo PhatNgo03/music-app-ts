@@ -14,8 +14,12 @@ router.post(
   "/create",
   uploadMiddleware.single("avatar"), 
   uploadCloud.upload,
-  // validate.createPost,
+  validate.create,
   controller.createPost
 );
 
+
+router.patch("/change-status/:status/:id", controller.changeStatus); //truyen status dong va id dong
+
+router.patch("/change-multi", controller.changeMulti);
 export const topicRoutes: Router = router;

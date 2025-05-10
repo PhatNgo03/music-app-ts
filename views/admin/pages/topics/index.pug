@@ -3,7 +3,7 @@ include ../../mixins/filter-status.pug
 include ../../mixins/search.pug
 include ../../mixins/pagination.pug
 include ../../mixins/sort.pug
-
+include ../../mixins/form-change-multi.pug
 block main
 
     h1 Danh sách chủ đề
@@ -28,9 +28,10 @@ block main
         .card-body
           .row   
             .col-8
+              +form-change-multi(`/${prefixAdmin}/topics/change-multi?_method=PATCH`)
             .col-4 
               a(
-                href=`${prefixAdmin}/topics/create`
+                href=`/${prefixAdmin}/topics/create`
                 class="btn btn-outline-success"
               ) + Thêm mới
           table(
@@ -95,5 +96,11 @@ block main
                     ) Xóa
                     
       +pagination(pagination)
+    form(
+    action=""
+    method="POST"
+    id="form-change-status"
+    data-path=`${prefixAdmin}/topics/change-status`
+  )
 
     script(src="/admin/js/topic.js")

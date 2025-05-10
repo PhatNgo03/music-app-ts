@@ -150,3 +150,66 @@ if (uploadImage) {
   });
 }
 // End Upload images
+
+
+//Change status
+const buttonsChangeStatus = document.querySelectorAll("[button-change-status]");
+if (buttonsChangeStatus.length > 0) {
+
+  const formChangeStatus = document.querySelector("#form-change-status");
+  const path = formChangeStatus.getAttribute("data-path");
+  // console.log(path);
+
+  buttonsChangeStatus.forEach(button => {
+    button.addEventListener("click", () => {
+      const statusCurrent = button.getAttribute("data-status");
+      const id = button.getAttribute("data-id");
+
+      let statusChange = statusCurrent == "active" ? "inactive" : "active";
+
+      const action = path + `/${statusChange}/${id}?_method=PATCH`;
+      formChangeStatus.action = action;
+      formChangeStatus.submit();
+    });
+  });
+}
+//End change status
+
+//Form Change Multi
+const  formChangeMulti = document.querySelector("[form-change-multi]");
+if(formChangeMulti){
+  // console.log(formChangeMulti);
+  formChangeMulti.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const checkboxMulti = document.querySelector("[checkbox-multi]");
+    const inputChecked = checkboxMulti.querySelectorAll("input[name='id']:checked"); 
+
+    const typeChange = e.target.elements.type.value;
+    if(typeChange == "delete-all"){
+      const isConfirm = confirm("Bạn có chắc muốn xóa những chủ đề này ?");
+
+      if(!isConfirm){
+        return;
+      }
+    }
+    if(inputChecked.length > 0){
+      let ids = [];
+      const inputIds = formChangeMulti.querySelector("input[name='ids']");
+
+      inputChecked.forEach(input => {
+        const id = input.getAttribute("value");
+        // const id = input.value
+
+        if(typeChange == "change-position") {
+          const position = input.closest("tr").querySelector("input[name='position']").value;
+          ids.push(`${id}-${position}`);
+        }else {
+          ids.push(id);
+        }
+      });
+      inputIds.value= ids.join(", ");
+      formChangeMulti.submit();
+    } 
+  })
+}
+//End form change multi
