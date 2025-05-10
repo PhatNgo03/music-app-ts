@@ -2,20 +2,83 @@ import { Request, Response } from "express";
 import Topic from "../../models/topic.model";
 import { tree } from "../../helpers/createTree"
 import { systemConfig } from "../../config/config";
+import filterStatus from "../../helpers/filterStatus";
+import search from "../../helpers/search";
+import paginate from "../../helpers/pagination";
+import { SortOrder } from "mongoose";
+
 // [GET] /admin/topics
-export const index = async (req: Request, res: Response) => {
-  try {
-    res.render("admin/pages/topics/index", {
-        pageTitle: "Quản lý chủ đề ",
-      });
-  } catch (error) {
-    res.status(500).send("Server error");
+export const index =  async(req: Request, res: Response) => {
+  //filterStatus
+  const query = req.query as { status?: string };
+  let filter = filterStatus({ status: query.status ?? "active" });
+  
+  // If filter is not an array, set a default value
+  if (!Array.isArray(filter)) {
+    filter = [];
   }
-};
+
+  let find = {
+    deleted : false
+  }
+  //statusTopics
+  if (req.query.status) {
+    (find as any).status = req.query.status;
+  }
+  
+  //keyword search
+  const objectSearch = search(req.query);
+  if(objectSearch.regex){
+    (find as any).title = objectSearch.regex;
+  }
 
 
+  //Pagination 
+  const countTopics= await Topic.countDocuments(find);
+  let objectPagination = paginate(
+    {
+      currentPage : 1,
+      limitItems: 4,
+      skip: 0,
+      totalPage: 0,
+    },
+    req.query,
+    countTopics
+  )
 
-// [GET] /admin/product-category/create
+
+  const sort: Record<string, SortOrder> = {};
+
+  const sortKey = req.query.sortKey;
+  const sortValue = req.query.sortValue;
+
+  if (
+    typeof sortKey === 'string' &&
+    typeof sortValue === 'string' &&
+    ['asc', 'desc', '1', '-1'].includes(sortValue)
+  ) {
+    sort[sortKey] = sortValue as SortOrder;
+  } else {
+    sort['position'] = 'desc';
+  }
+  //End sort
+
+  
+  const topics = await Topic.find(find)
+  .sort(sort)
+  .limit(objectPagination.limitItems).skip(objectPagination.skip);
+
+  // console.log(products);
+  res.render("admin/pages/topics/index.pug", {
+    pageTitle: "Trang danh sách chủ đề",
+    topics : topics,
+    filter: filter,
+    keyword: objectSearch.keyword,
+    pagination : objectPagination
+})
+}
+
+// [GET] /admin/topics/create
 export const create =  async(req: Request, res: Response) => {
   try {
     let find = {
@@ -34,7 +97,7 @@ export const create =  async(req: Request, res: Response) => {
 
  
 }
-// [POST] /admin/products/create
+// [POST] /admin/topics/create
 export const createPost =  async(req: Request, res: Response) => {
   if(req.body.position == ""){
     const count= await Topic.countDocuments();

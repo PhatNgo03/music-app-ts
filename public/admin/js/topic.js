@@ -1,24 +1,127 @@
-//Delete item
-const buttonDelete = document.querySelectorAll("[button-delete]");
-if(buttonDelete.length > 0) {
-  const formDeleteItem = document.querySelector("#form-delete-item");
-  const path = formDeleteItem.getAttribute("data-path");
-  buttonDelete.forEach(button => {
-    button.addEventListener("click", () => {
-     const isConfirm = confirm(`Bạn có chắc muốn xóa sản phẩm này?`);
-     if(isConfirm){
-      const id = button.getAttribute("data-id");
+//Checkbox Multi
+const checkboxMulti = document.querySelector("[checkbox-multi]") //query to table chua item
+if (checkboxMulti) {
+  const inputCheckAll = checkboxMulti.querySelector("input[name='checkall']");
+  const inputsId = checkboxMulti.querySelectorAll("input[name='id']");
 
-      const action = `${path}/${id}?_method=DELETE`;
+  inputCheckAll.addEventListener("click", () => {
+    if (inputCheckAll.checked) {
+      inputsId.forEach(input => {
+        input.checked = true;
+      });
+    } else {
+      inputsId.forEach(input => {
+        input.checked = false;
+      });
+    }
+  }); 
 
-      formDeleteItem.action = action;
-      formDeleteItem.submit();
-     }
-  });
+  inputsId.forEach((input) => {
+    input.addEventListener("click", () => {
+      const countChecked = checkboxMulti.querySelectorAll("input[name='id']:checked").length; //count sl item checked
+      if(countChecked === inputsId.length){
+        inputCheckAll.checked = true;
+      }
+      else {
+        inputCheckAll.checked = false;
+      }
+    });
   });
 }
-//End delete item
+//End checkbox Multi
 
+
+const buttonStatus = document.querySelectorAll("[button-status]");
+if(buttonStatus.length > 0){
+    let url = new URL(window.location.href);
+    // console.log(url);
+
+    buttonStatus.forEach(button => {
+      button.addEventListener("click", () => {
+        const status = button.getAttribute("button-status");
+
+        if(status) {
+          url.searchParams.set("status", status);
+        } else {
+          url.searchParams.delete("status");
+        }
+        // console.log(url.href);
+        window.location.href = url.href
+      })
+    })
+}
+//End button status topics
+
+//Form Search
+const formSearch = document.querySelector("#form-search");
+if(formSearch){
+  let url = new URL(window.location.href);
+
+  formSearch.addEventListener("submit", (e) => {
+    e.preventDefault();
+    // console.log(e.target.elements.keyword.value);
+    const keyword =  e.target.elements.keyword.value
+    if(keyword) {
+      url.searchParams.set("keyword", keyword);
+    } else {
+      url.searchParams.delete("keyword");
+    }
+    window.location.href = url.href
+  });
+}
+//End Form Search
+
+//Pagination
+const buttonPagination = document.querySelectorAll("[button-pagination]");
+if(buttonPagination){
+  buttonPagination.forEach(button => {
+    let url = new URL(window.location.href);
+    button.addEventListener("click", () => {
+      const page = button.getAttribute("button-pagination");
+      url.searchParams.set("page", page);
+      window.location.href =  url.href; // chuyen huong den trang page hien tai
+    });
+  });
+}
+//End pagination
+
+
+
+//Sort
+const sort = document.querySelector("[sort]");
+if(sort){
+  let url = new URL(window.location.href);
+  
+  const sortSelect = sort.querySelector("[sort-select]");
+  const sortClear = sort.querySelector("[sort-clear]");
+
+  sortSelect.addEventListener("change", (e) => {
+    const value = e.target.value;
+    const [sortKey, sortValue] = value.split("-");
+    url.searchParams.set("sortKey", sortKey);
+    url.searchParams.set("sortValue", sortValue);
+    window.location.href =  url.href; 
+  })
+  //Sort clear
+  sortClear.addEventListener("click", () => {
+    url.searchParams.delete("sortKey");
+    url.searchParams.delete("sortValue");
+    window.location.href =  url.href; 
+  })
+
+  //Them selected cho option
+
+  const sortKey = url.searchParams.get("sortKey");
+  const sortValue = url.searchParams.get("sortValue");
+  if(sortKey && sortValue){
+    const stringSort = `${sortKey}-${sortValue}`;
+    const optionSelected = sortSelect.querySelector(`option[value='${stringSort}']`);
+    optionSelected.selected = true;
+  }
+//End Clear sort
+}
+
+//End Sort
 
 //Upload images
 const uploadImage = document.querySelector("[upload-image]");
