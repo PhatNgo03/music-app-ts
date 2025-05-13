@@ -13,10 +13,10 @@ export const index =  async(req: Request, res: Response) => {
   const query = req.query as { status?: string };
   let filter = filterStatus({ status: query.status ?? "active" });
   
-  // If filter is not an array, set a default value
-  if (!Array.isArray(filter)) {
-    filter = [];
-  }
+  // // If filter is not an array, set a default value
+  // if (!Array.isArray(filter)) {
+  //   filter = [];
+  // }
 
   let find = {
     deleted : false
