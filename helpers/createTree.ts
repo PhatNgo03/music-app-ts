@@ -4,12 +4,13 @@ const createTree = (arr: any[], parentId: string = ""): any[] => {
   const tree: any[] = [];
 
   arr.forEach((item) => {
-    if (item.parent_id === parentId) {
+    if ((item.parent_id ?? "").toString() === parentId) {
       count++;
-      const newItem = { ...item }; 
-      newItem.index = count;
+      // clone object plain
+      const newItem: any = { ...item, index: count };
 
-      const children = createTree(arr, item.id);
+      // đệ quy tìm con
+      const children = createTree(arr, item._id.toString());
       if (children.length > 0) {
         newItem.children = children;
       }

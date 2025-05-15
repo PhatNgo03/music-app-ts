@@ -12,11 +12,6 @@ export const index =  async(req: Request, res: Response) => {
   //filterStatus
   const query = req.query as { status?: string };
   let filter = filterStatus({ status: query.status ?? "active" });
-  
-  // // If filter is not an array, set a default value
-  // if (!Array.isArray(filter)) {
-  //   filter = [];
-  // }
 
   let find = {
     deleted : false
@@ -63,15 +58,18 @@ export const index =  async(req: Request, res: Response) => {
   }
   //End sort
 
-  
-  const topics = await Topic.find(find)
-  .sort(sort)
-  .limit(objectPagination.limitItems).skip(objectPagination.skip);
+  // Lấy dữ liệu có phân trang để hiển thị bảng
+  const records = await Topic.find(find).sort(sort)
+  .limit(objectPagination.limitItems).skip(objectPagination.skip).lean();
 
-  // console.log(products);
+   // Lấy toàn bộ dữ liệu không phân trang để build cây đầy đủ (dùng cho dropdown, cây phân cấp)
+  const allRecords = await Topic.find({ deleted: false }).lean();
+  const newRecords = tree(allRecords);
+  
   res.render("admin/pages/topics/index.pug", {
     pageTitle: "Trang danh sách chủ đề",
-    topics : topics,
+    records : records,
+    treeRecords: newRecords,
     filter: filter,
     keyword: objectSearch.keyword,
     pagination : objectPagination
@@ -79,24 +77,19 @@ export const index =  async(req: Request, res: Response) => {
 }
 
 // [GET] /admin/topics/create
-export const create =  async(req: Request, res: Response) => {
+export const create = async (req: Request, res: Response) => {
   try {
-    let find = {
-      deleted: false
-    } 
-    const records = await Topic.find(find);
+    const records = await Topic.find({ deleted: false }).lean();
     const newRecords = tree(records);
     res.render("admin/pages/topics/create.pug", {
       pageTitle: "Tạo chủ đề bài hát",
-      records : newRecords
-  })
+      records: newRecords,
+      parent_id: ""
+    });
   } catch (error) {
     res.status(500).send("Server error");
   }
- 
-
- 
-}
+};
 // [POST] /admin/topics/create
 export const createPost =  async(req: Request, res: Response) => {
   if(req.body.position == ""){
@@ -112,9 +105,7 @@ export const createPost =  async(req: Request, res: Response) => {
 
 }
 
-
-
-// [PATCH] /admin/products/change-status/:status/:id
+// [PATCH] /admin/topics/change-status/:status/:id
 export const changeStatus = async (req: Request, res: Response) => {
   // console.log(req.params);
   const status = req.params.status;
@@ -127,11 +118,10 @@ export const changeStatus = async (req: Request, res: Response) => {
   res.redirect("back");
 }
 
-// [PATCH] /admin/products/change-multi
+// [PATCH] /admin/topics/change-multi
 export const changeMulti = async (req: Request, res: Response) => {
   const type = req.body.type;
   const ids = req.body.ids.split(", ");
-  console.log("IDs received:", req.body.ids);
   switch(type){
     case "active":
       await Topic.updateMany({_id : {$in: ids}}, {
@@ -170,3 +160,42 @@ export const changeMulti = async (req: Request, res: Response) => {
   
   res.redirect(`/admin/topics`);
 }
+
+
+// [GET] /admin/topics/edit/:"id"
+export const edit = async (req: Request, res: Response) => {
+  try {
+    const find = {
+      deleted: false,
+      _id: req.params.id
+    }
+    const topics = await Topic.findOne(find).lean();
+    const records = await Topic.find({ deleted: false }).lean();
+    const newRecords = tree(records);
+   
+    res.render("admin/pages/topics/edit.pug", {
+      pageTitle: "Chỉnh sửa chủ đề bài hát",
+      topics: topics,
+      records: newRecords,
+      parent_id: topics?.parent_id?.toString() || "",
+    });
+  } catch (error) {
+    console.error("Error in edit:", error);
+    res.redirect(`/${systemConfig.prefixAdmin}/topics`);
+  }
+};
+
+
+// [PATCH] /admin/topics/edit/:"id"
+export const editPatch = async (req: Request, res: Response) => {
+  const id = req.params.id;
+  req.body.position = parseInt(req.body.position);
+  try {
+    await Topic.updateOne({ _id: id }, req.body);
+  } catch (error) {
+    res.status(500).send("Server error");
+  }
+  res.redirect("back");
+};
+
+

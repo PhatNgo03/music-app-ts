@@ -13,13 +13,24 @@ router.get("/create", controller.create);
 router.post(
   "/create",
   uploadMiddleware.single("avatar"), 
-  uploadCloud.upload,
   validate.create,
+  uploadCloud.upload,
   controller.createPost
 );
 
 
+router.get("/edit/:id", controller.edit);
+
+router.patch(
+  "/edit/:id",
+  uploadMiddleware.single("avatar"),
+  validate.create,
+  uploadCloud.upload,
+  controller.editPatch,
+  );
+
 router.patch("/change-status/:status/:id", controller.changeStatus); //truyen status dong va id dong
 
 router.patch("/change-multi", controller.changeMulti);
+
 export const topicRoutes: Router = router;
