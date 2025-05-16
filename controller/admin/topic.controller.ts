@@ -198,4 +198,40 @@ export const editPatch = async (req: Request, res: Response) => {
   res.redirect("back");
 };
 
+// [DELETE] /admin/topics/delete/:id
+export const deleteItem = async (req: Request, res: Response) => {
+  const id = req.params.id;
+
+  await Topic.updateOne(
+    {_id: id},
+    {
+      deleted: true,
+    }, 
+  );
+
+ res.redirect(`/${systemConfig.prefixAdmin}/topics`);
+}
+
+
+
+// [GET] /admin/topics/detail/:"id"
+export const detail =  async(req: Request, res: Response) => {
+  try{
+  const find = {
+    deleted : false,
+    _id: req.params.id
+  }
+  const topic = await Topic.findOne(find);
+
+  if (!topic) {
+    res.redirect(`${systemConfig.prefixAdmin}/topics`);
+  }
+  res.render("admin/pages/topics/detail", {
+    pageTitle: topic?.title,
+    topic: topic,
+  });
+  } catch(error){
+    res.redirect(`${systemConfig.prefixAdmin}/topics`);
+  }
+};
 

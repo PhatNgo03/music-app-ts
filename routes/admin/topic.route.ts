@@ -33,4 +33,7 @@ router.patch("/change-status/:status/:id", controller.changeStatus); //truyen st
 
 router.patch("/change-multi", controller.changeMulti);
 
+router.delete("/delete/:id", controller.deleteItem);
+
+router.get("/detail/:id", controller.detail);
 export const topicRoutes: Router = router;

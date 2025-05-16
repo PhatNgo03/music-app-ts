@@ -51,7 +51,7 @@ mixin table-tree(items, level = 1)
             class="btn btn-warning btn-sm mx-1") Sửa
           a(
             class="btn btn-danger btn-sm"
-            data-id = item.id
+            data-id = item._id
             button-delete
           ) Xóa
     if item.children && item.children.length > 0

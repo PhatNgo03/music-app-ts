@@ -1,0 +1,40 @@
+extends ../../layouts/default.pug
+
+block main
+  if (topic.title)
+    h1(class="mb-4 text-primary border-bottom pb-2") #{topic.title}
+
+  .card.shadow-lg.p-4.mb-4.bg-light.rounded
+    if (topic.avatar)
+      div(class="mb-4 ")
+        img(
+          src=topic.avatar 
+          class="rounded shadow-sm"
+          style="width: 150px; border: 2px solid #ddd;"
+        )
+
+    if (topic.status)
+      div(class="mb-3 d-flex align-items-center")
+        span(class="me-2 text-muted fw-bold") Trạng thái:
+        if (topic.status === "active")
+          span(class="badge bg-success text-white") Hoạt động
+        else 
+          span(class="badge bg-danger text-white") Dừng Hoạt động
+
+    if (topic.position)
+      div(class="mb-3 d-flex align-items-center")
+        span(class="me-2 text-muted fw-bold") Vị trí:
+        b.text-dark #{topic.position}
+
+    if (topic.description)
+      div(class="mb-3")
+        span(class="text-muted fw-bold") Mô tả:
+        p.text-dark.mt-2 !{topic.description}
+
+    div(class="text-end mt-4")
+      a(
+        href=`/${prefixAdmin}/topics/edit/${topic.id}`
+        class="btn btn-warning btn-sm"
+      ) Sửa
+
+  script(src="/admin/js/topic.js")
