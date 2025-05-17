@@ -18,24 +18,18 @@ block main
       span.text-dark #{account.email}
 
     div(class="mb-3 d-flex align-items-center")
-      span(class="me-2 text-muted fw-bold") Số điện thoại:
-      span.text-dark #{account.phone}
-
-    div(class="mb-3 d-flex align-items-center")
       span(class="me-2 text-muted fw-bold") Trạng thái:
       if (account.status === "active")
         span(class="badge bg-success text-white") Hoạt động
       else
         span(class="badge bg-danger text-white") Không hoạt động
 
-
     div(class="mb-3 d-flex align-items-center")
-      span(class="me-2 text-muted fw-bold") Role ID:
-      span.text-dark #{account.role_id}
-
-    div(class="mb-3 d-flex align-items-center")
-      span(class="me-2 text-muted fw-bold") Đã xóa:
-      span.text-dark #{account.deleted ? "Đã xóa" : "Chưa xóa"}
+      span(class="me-2 text-muted fw-bold") Vai trò:
+      if account.role_id && account.role_id.title
+        span.text-dark #{account.role_id.title}
+      else
+        span.text-muted Không xác định
 
     div(class="mb-3 d-flex align-items-center")
       span(class="me-2 text-muted fw-bold") Ngày tạo:
@@ -44,6 +38,36 @@ block main
     div(class="mb-3 d-flex align-items-center")
       span(class="me-2 text-muted fw-bold") Ngày cập nhật:
       span.text-dark #{new Date(account.updatedAt).toLocaleString()}
+    
+    div(class="mb-3 d-flex align-items-center")
+      span(class="me-2 text-muted fw-bold") Người tạo:
+      if account.accountFullName
+        span.text-dark
+          | #{account.accountFullName} 
+          if account.accountEmail
+            |  (#{account.accountEmail})
+      else
+        span.text-muted Không xác định
+    div(class="mb-3 d-flex align-items-center")
+      span(class="me-2 text-muted fw-bold") Cập nhật bởi:
+      if account.updatedBy && account.updatedBy.length
+        - const lastUpdated = account.updatedBy[account.updatedBy.length - 1]
+        span.text-dark
+          | #{lastUpdated.accountFullName || 'Không xác định'}
+          if lastUpdated.accountEmail
+            |  (#{lastUpdated.accountEmail})
+      else
+        span.text-muted Không xác định
+    
+    div(class="mb-3 d-flex align-items-center")
+      span(class="me-2 text-muted fw-bold") Người xóa:
+      if account.deletedBy && account.deletedBy.accountFullName
+        span.text-dark
+          | #{account.deletedBy.accountFullName}
+          if account.deletedBy.accountEmail
+            |  (#{account.deletedBy.accountEmail})
+      else
+        span.text-muted Không xác định
 
     div(class="text-end mt-4")
       a(
@@ -55,4 +79,4 @@ block main
         class="btn btn-secondary btn-sm"
       ) Quay lại
 
-  script(src="/admin/js/topic.js")
+  script(src="/admin/js/account.js")

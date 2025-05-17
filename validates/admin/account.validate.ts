@@ -47,4 +47,32 @@ validate.create = async  (req: Request, res: Response, next: NextFunction) => {
   next();
 };
 
+
+validate.edit = async (req: Request, res: Response, next: NextFunction) => {
+  const { id } = req.params;
+  const { fullName, email, phone, avatar } = req.body;
+
+  // Validate fullName
+  if (!fullName || fullName.trim() === "") {
+    return res.status(400).json({ message: "Vui lòng nhập họ tên!" });
+  }
+  // Check email exists for another account
+  try {
+    const existingAccount = await Account.findOne({ email });
+    if (existingAccount && existingAccount._id.toString() !== id) {
+      return res.status(400).json({ message: "Email đã được sử dụng bởi tài khoản khác!" });
+    }
+  } catch (error) {
+    return res.status(500).json({ message: "Lỗi server!" });
+  }
+
+  // Validate phone
+  const phoneRegex = /^[0-9]{10}$/;
+  if (!phone || !phoneRegex.test(phone)) {
+    return res.status(400).json({ message: "Số điện thoại không hợp lệ!" });
+  }
+
+  next();
+};
+
 export default validate;

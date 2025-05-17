@@ -17,8 +17,45 @@ export const index = async (req :Request, res: Response) => {
     _id: record.role_id,
     deleted: false   
   });
-
+  
   (record as any).role = role;
+
+  
+  for(const item of records){
+    //get info user created
+    const user = await Account.findOne({
+      _id : item.createdBy.account_id
+    });
+
+    if(user){
+      item.accountFullName = user.fullName;
+      (item as any).accountEmail = user.email;
+    }
+
+   // get info user updated lasted
+    const updatedBy = item.updatedBy?.slice(-1)[0];
+    if (updatedBy) {
+      const userUpdated = await Account.findOne({
+        _id: updatedBy.account_id,
+      });
+      if (userUpdated) {
+        updatedBy.accountFullName = userUpdated.fullName;
+        updatedBy.accountEmail = userUpdated.email;
+      } else {
+        updatedBy.accountFullName = "admin";
+        updatedBy.accountEmail = "";
+      }
+    }
+
+    /// get info user deleted
+    if (item.deletedBy?.account_id) {
+      const deleter = await Account.findById(item.deletedBy.account_id).lean();
+      if (deleter) {
+        item.deletedBy.accountFullName = deleter.fullName;
+        item.deletedBy.accountEmail = deleter.email;  
+      }
+    }
+  }
 }
 
 res.render("admin/pages/accounts/index.pug", {
@@ -62,7 +99,9 @@ export const createPost = async (req: Request, res: Response) => {
         errorMessage: "Role không hợp lệ"
       });
     }
-
+    req.body.createdBy = {
+        account_id: res.locals.user.id
+    }
     const hashedPassword = md5(password);
 
     const record = new Account({
@@ -81,3 +120,125 @@ export const createPost = async (req: Request, res: Response) => {
     });
   }
 };
+
+
+// [GET] /admin/roles/edit/:"id"
+export const edit =  async(req: Request, res: Response) => {
+  try{
+  const find = {
+    deleted : false,
+    _id: req.params.id
+  }
+  const accounts = await Account.findOne(find);
+  const roles = await Role.find({
+    deleted: false,
+  });
+  res.render("admin/pages/accounts/edit", {
+    pageTitle: "Chỉnh sửa tài khoản",
+    accounts: accounts,
+    roles: roles,
+  });
+  } catch(error){
+    res.redirect(`/${systemConfig.prefixAdmin}/accounts`);
+  }
+};
+
+// [PATCH] /admin/accounts/edit/:id
+export const editPatch = async (req: Request, res: Response) => {
+  const id = req.params.id;
+
+  if (req.body.email) {
+    delete req.body.email;
+  }
+
+  if (req.body.password) {
+    req.body.password = md5(req.body.password);
+  } else {
+    delete req.body.password;
+  }
+
+  try {
+    const updatedBy = {
+        account_id: res.locals.user.id,
+        updatedAt: new Date()
+    }
+    await Account.updateOne({ _id: id }, {
+      ...req.body,
+      $push:{
+        updatedBy: updatedBy
+      }
+    });
+    res.redirect(`/${systemConfig.prefixAdmin}/accounts`);
+  } catch (error) {
+    res.status(500).send("Server error");
+  }
+};
+
+
+// [DELETE] /admin/accounts/delete/:id
+export const deleteItem = async (req: Request, res: Response) => {
+  const id = req.params.id;
+
+  await Account.updateOne(
+    {_id: id},
+    {
+      deleted: true,
+      deletedBy: {
+      account_id: res.locals.user.id,
+      deletedAt: new Date()
+    }
+    }, 
+  );
+
+ res.redirect(`/${systemConfig.prefixAdmin}/accounts`);
+}
+
+
+
+// [GET] /admin/accounts/detail/:"id"
+export const detail =  async(req: Request, res: Response) => {
+  try{
+  const find = {
+    deleted : false,
+    _id: req.params.id
+  }
+  const account = await Account.findOne(find).populate('role_id');
+
+  if (account?.createdBy?.account_id) {
+    const user = await Account.findOne({ _id: account.createdBy.account_id });
+    if (user) {
+      (account as any).accountFullName = user.fullName;
+      (account as any).accountEmail = user.email; 
+    }
+  }
+  if (account?.deletedBy?.account_id) {
+    const deleter = await Account.findById(account.deletedBy.account_id).lean();
+    if (deleter) {
+      account.deletedBy.accountFullName = deleter.fullName;
+      account.deletedBy.accountEmail = deleter.email;
+    }
+  }
+  
+  const updatedBy = account?.updatedBy?.slice(-1)[0];
+  if (updatedBy) {
+    const userUpdated = await Account.findOne({ _id: updatedBy.account_id });
+    if (userUpdated) {
+      updatedBy.accountFullName = userUpdated.fullName;
+      updatedBy.accountEmail = userUpdated.email;
+    } else {
+      updatedBy.accountFullName = "admin";
+      updatedBy.accountEmail = "";
+    }
+  }
+  if (!account) {
+    res.redirect(`${systemConfig.prefixAdmin}/accounts`);
+  }
+  res.render("admin/pages/accounts/detail", {
+    pageTitle: account?.title,
+    account: account,
+  });
+  } catch(error){
+    res.redirect(`${systemConfig.prefixAdmin}/accounts`);
+  }
+};
+

@@ -18,4 +18,18 @@ router.post("/create",
   controller.createPost
 )
 
+router.get("/edit/:id", controller.edit);
+
+router.patch(
+  "/edit/:id",
+  uploadMiddleware.single("avatar"),
+  uploadCloud.upload,
+  validate.edit,
+  controller.editPatch,
+  );
+
+router.delete("/delete/:id", controller.deleteItem);
+
+router.get("/detail/:id", controller.detail);
+
 export const accountRoutes : Router = router;

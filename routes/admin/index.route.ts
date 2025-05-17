@@ -17,7 +17,7 @@ const adminRoutes = (app: Express): void => {
 
   app.use(PATH_ADMIN + "/roles",  authMiddleWare.requireAuth, roleRoutes);
 
-  app.use(PATH_ADMIN + "/accounts", accountRoutes);
+  app.use(PATH_ADMIN + "/accounts", authMiddleWare.requireAuth, accountRoutes);
 
   app.use(PATH_ADMIN + "/auth", authRoutes);
 
