@@ -15,33 +15,43 @@ export const login = async (req: Request, res: Response) => {
 
 // [POST] /admin/auth/login
 export const loginPost = async (req: Request, res: Response) => {
-  const email = req.body.email;
-  const password = req.body.password;
-  // const {email, password} = req.body;
+  const { email, password } = req.body;
 
   const user = await Account.findOne({
-    email: email,
-    deleted : false
+    email,
+    deleted: false
   });
 
-  if(!user) {
-    res.redirect("back");
-    return;
+  if (!user) {
+    console.log(`Login failed: Email không tồn tại - Email: ${email}`);
+    return res.status(401).render("admin/pages/auth/login.pug", {
+      pageTitle: "Đăng nhập",
+      errorMessage: "Email không tồn tại"
+    });
   }
-  if(md5(password) != user.password){
-    res.redirect("back");
-    return;
+
+  if (md5(password) !== user.password) {
+    console.log(`Login failed: Mật khẩu không đúng - Email: ${email}`);
+    return res.status(401).render("admin/pages/auth/login.pug", {
+      pageTitle: "Đăng nhập",
+      errorMessage: "Mật khẩu không đúng"
+    });
   }
-  if(user.status == "inactive"){
-    res.redirect("back");
-    return;
+
+  if (user.status === "inactive") {
+    console.log(`Login failed: Tài khoản chưa được kích hoạt - Email: ${email}`);
+    return res.status(403).render("admin/pages/auth/login.pug", {
+      pageTitle: "Đăng nhập",
+      errorMessage: "Tài khoản chưa được kích hoạt"
+    });
   }
+
+  // Set cookie token
   res.cookie("token", user.token, {
-  httpOnly: true,
-  path: "/", 
-  sameSite: "lax", 
-});
+    httpOnly: true,
+    path: "/",
+    sameSite: "lax",
+  });
 
   res.redirect(`/admin/dashboard`);
- 
-}
+};

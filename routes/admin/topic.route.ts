@@ -1,7 +1,7 @@
 import { Router } from "express";
 import multer from "multer";
 import * as controller from "../../controller/admin/topic.controller";
-import validate from "../../validates/topic.validate";
+import validate from "../../validates/admin/topic.validate";
 import * as uploadCloud from "../../middlewares/admin/uploadCloud.middleware";
 const router: Router = Router();
 const uploadMiddleware = multer(); 

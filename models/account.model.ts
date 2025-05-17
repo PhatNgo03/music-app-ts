@@ -1,6 +1,8 @@
 import { generateRandomString } from "../helpers/generate";
 
 const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
+
 const accountSchema = new mongoose.Schema({
     fullName: String, 
     email : String,
@@ -11,7 +13,11 @@ const accountSchema = new mongoose.Schema({
     },
     phone: String, 
     avatar: String,
-    role_id: String,
+    role_id: {
+    type: Schema.Types.ObjectId,
+    ref: "Role",
+    required: true,
+  },
     status: {
       type :String,
       default: "active"
