@@ -6,9 +6,8 @@ include ../../mixins/sort.pug
 include ../../mixins/form-change-multi.pug
 include ../../mixins/table-tree.pug
 block main
-
+  if(role.permissions.includes("topics_view"))
     h1 Danh sách chủ đề
-
     .card.mb-3
       .card-header Bộ lọc và tìm kiếm
       .card-body
@@ -31,10 +30,11 @@ block main
             .col-8
               +form-change-multi(`/${prefixAdmin}/topics/change-multi?_method=PATCH`)
             .col-4 
-              a(
-                href=`/${prefixAdmin}/topics/create`
-                class="btn btn-outline-success"
-              ) + Thêm mới
+              if(role.permissions.includes("topics_create"))
+                a(
+                  href=`/${prefixAdmin}/topics/create`
+                  class="btn btn-outline-success"
+                ) + Thêm mới
           table(
             class="table table-hover table-sm"
             checkbox-multi
@@ -66,3 +66,5 @@ block main
     )
 
     script(src="/admin/js/topic.js")
+  else 
+    h1 Không có quyền truy cập!

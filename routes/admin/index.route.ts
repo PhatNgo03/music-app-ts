@@ -13,7 +13,7 @@ const adminRoutes = (app: Express): void => {
 
   app.use(`${PATH_ADMIN}/dashboard`, authMiddleWare.requireAuth, dashboardRoutes);
 
-  app.use(`${PATH_ADMIN}/topics`, topicRoutes);
+  app.use(`${PATH_ADMIN}/topics`,authMiddleWare.requireAuth, topicRoutes);
 
   app.use(PATH_ADMIN + "/roles",  authMiddleWare.requireAuth, roleRoutes);
 
