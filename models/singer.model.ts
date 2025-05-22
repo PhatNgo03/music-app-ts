@@ -6,11 +6,27 @@ const singerSchema = new mongoose.Schema(
     avatar: String,
     status: String,
     slug: String,
-    deleted: {
-      type: Boolean,
-      default: false
+    createdBy: {
+      account_id: String,
+      createdAt: {
+          type: Date,
+          default: Date.now
+      }
     },
-    deletedAt: Date,
+    deleted: {
+        type:Boolean,
+        default:false
+    },
+    deletedBy: {
+        account_id: String,
+        deletedAt:Date
+    },
+    updatedBy: [
+      {
+          account_id: String,
+          updatedAt:Date
+      },
+    ]
   },
   {
     timestamps: true,

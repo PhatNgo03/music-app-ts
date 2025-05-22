@@ -1,0 +1,75 @@
+extends ../../layouts/default.pug
+
+block main
+  if(role.permissions.includes("singers_create"))
+    h1(class="mb-4") Thêm mới ca sĩ
+
+    form(
+      action=`/${prefixAdmin}/singers/create`
+      method="POST"
+      enctype="multipart/form-data"
+    )
+
+      div(class="form-group mb-3") 
+        label(for="fullName") Họ tên *
+        input(
+          type="text"
+          class="form-control"
+          id="fullName"
+          name="fullName"
+        )
+      div.form-group.mb-3(upload-image)
+          label(for="avatar") Avatar
+          div.custom-file
+            label(for="avatar" class="btn btn-secondary") Chọn tệp
+            input(
+              type="file"
+              class="form-control-file"
+              id="avatar"
+              name="avatar"
+              accept="image/*"
+              upload-image-input
+              style="display: none;"
+            )
+            div(
+              class="image-preview-container"
+            )
+              img(
+                src=""
+                upload-image-preview
+                class="image-preview"
+                style="display: none"
+              )
+              button.upload-image-remove(
+                upload-image-remove
+                type="button"
+                style="display: none"
+              ) X
+      div(class="form-group mb-3")  
+        div(class="form-group form-check form-check-inline")
+          input(
+            type="radio"
+            class="form-check-input"
+            id="statusActive"
+            name="status"
+            value="active"
+            checked
+          )
+          label(for="statusInActive" class="form-check-label") Hoạt động
+        div(class="form-group form-check form-check-inline")
+          input(
+            type="radio"
+            class="form-check-input"
+            id="statusInActive"
+            name="status"
+            value="inactive"
+          )
+          label(for="statusActive" class="form-check-label") Dừng Hoạt động
+      div(class="form-group mb-3")
+        button(
+          type="submit"
+          class="btn btn-primary"
+        ) Tạo mới
+    script(src="/admin/js/script.js")
+  else 
+    h1 Không có quyền truy cập!
