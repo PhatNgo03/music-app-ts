@@ -55,3 +55,10 @@ export const loginPost = async (req: Request, res: Response) => {
 
   res.redirect(`/admin/dashboard`);
 };
+
+// [GET] /admin/auth/logout
+export const logout = async (req: Request, res: Response) => {
+  //xoa token trong cookie
+  res.clearCookie("token");
+  res.redirect(`/${systemConfig.prefixAdmin}/auth/login`);
+}

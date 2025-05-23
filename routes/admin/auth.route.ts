@@ -8,5 +8,5 @@ router.post("/login",
   validate.login,
   controller.loginPost
 );
-
+router.get("/logout", controller.logout);
 export const authRoutes : Router = router;

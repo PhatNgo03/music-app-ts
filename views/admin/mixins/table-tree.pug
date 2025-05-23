@@ -6,7 +6,7 @@ mixin table-tree(items, level = 1)
           input(
             type="checkbox"
             name="id"
-            value=item.id
+            value=item._id
           )
         td #{pagination.limitItems*(pagination.currentPage - 1) + (index+1)}
         td
