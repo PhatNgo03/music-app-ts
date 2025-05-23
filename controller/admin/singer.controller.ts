@@ -239,38 +239,7 @@ export const changeStatus = async (req: Request, res: Response) => {
 };
 
 
-// [PATCH] /admin/topics/change-multi
-// export const changeMulti = async (req: Request, res: Response) => {
-//   const type = req.body.type;
-//   const ids = req.body.ids.split(", ");
-//   switch(type){
-//     case "active":
-//       await Singer.updateMany({_id : {$in: ids}}, {
-//         status: "active",
-//        });
-//       break;
-    
-//     case "inactive":
-//       await Singer.updateMany({_id : {$in: ids}}, {
-//         status: "inactive",
-//       });
-//       break
-
-//     case "delete-all":
-//     await Singer.updateMany(
-//       {
-//         _id : {$in: ids}
-//       },
-//       {
-//         deleted: true,
-//       });
-//     break;
-//     default:
-//       break;
-//   }
-  
-//   res.redirect(`/admin/topics`);
-// }
+// [PATCH] /admin/singers/change-multi
 export const changeMulti = async (req: Request, res: Response) => {
   const type = req.body.type;
   const ids = (req.body.ids as string)
