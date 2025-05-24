@@ -10,21 +10,21 @@ cloudinary.config({
   api_secret: process.env.CLOUD_SECRET,
 });
 
-export const uploadImages = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-  const file = req.file as Express.Multer.File | undefined;  // Ép kiểu rõ ràng
+// export const uploadImages = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+//   const file = req.file as Express.Multer.File | undefined;  // Ép kiểu rõ ràng
 
-  if (file) {
-    try {
-      const link = await uploadToCloudinary(file.buffer);  // Upload ảnh lên Cloudinary
-      req.body[file.fieldname] = link;
-    } catch (error) {
-      console.error('Upload failed:', error);
-      res.status(500).json({ message: 'Upload failed' });
-      return;
-    }
-  }
-  next();  // Tiếp tục với middleware tiếp theo
-};
+//   if (file) {
+//     try {
+//       const link = await uploadToCloudinary(file.buffer);  // Upload ảnh lên Cloudinary
+//       req.body[file.fieldname] = link;
+//     } catch (error) {
+//       console.error('Upload failed:', error);
+//       res.status(500).json({ message: 'Upload failed' });
+//       return;
+//     }
+//   }
+//   next();  // Tiếp tục với middleware tiếp theo
+// };
 
 export const upload = (req: Request, res: Response, next: NextFunction): void => {
   const file = req.file as Express.Multer.File | undefined;  // Ép kiểu rõ ràng
@@ -66,4 +66,27 @@ export const upload = (req: Request, res: Response, next: NextFunction): void =>
   }
 
   uploadFile();  // Thực thi upload
+};
+
+export const uploadFields = async (req: Request, res: Response, next: NextFunction) => {
+  const files = req.files as { [fieldname: string]: Express.Multer.File[] };
+  // console.log(req["files"]);
+
+  if (files && typeof files === "object" && !Array.isArray(files)) {
+    for (const key in files) {
+      req.body[key] = [];
+
+      const array = files[key];
+      for (const item of array) {
+        try {
+          const result = await uploadToCloudinary(item.buffer, item.mimetype);
+          req.body[key].push(result);
+        } catch (error) {
+          console.log("Upload error:", error);
+        }
+      }
+    }
+  }
+
+  next();
 };

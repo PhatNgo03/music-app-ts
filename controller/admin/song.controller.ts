@@ -127,15 +127,56 @@ export const createPost = async (req: Request, res: Response) => {
     req.body.createdBy = {
       account_id: res.locals.user.id
     };
+    if(req.body.position == ""){
+      const count= await Song.countDocuments();
+      req.body.position = count + 1;
+    }
+    else{
+      req.body.position= parseInt(req.body.position);
+    }
+    
+    //Kiểm tra đang lưu dưới dạng 1 mảng thì lấy phần tử đầu tiên 
+    req.body.avatar = Array.isArray(req.body.avatar) ? req.body.avatar[0] : req.body.avatar;
+    req.body.audio = Array.isArray(req.body.audio) ? req.body.audio[0] : req.body.audio;  
 
-    const record = new Song(req.body);
-    await record.save();
+    //C1
+    // const record = new Song(req.body);
+    // await record.save();
 
-    return res.redirect(`/${systemConfig.prefixAdmin}/singers`);
+    //C2
+      const dataSong = {
+        title: req.body.title,
+        topicId: req.body.topicId,
+        singerId: req.body.singerId,
+        description: req.body.description,
+        status: req.body.status,
+        avatar: req.body.avatar,
+        audio: req.body.audio,
+        createdBy: req.body.createdBy,
+        position: req.body.position,
+    };
+
+    const song = new Song(dataSong);
+    await song.save();
+
+    return res.redirect(`/${systemConfig.prefixAdmin}/songs`);
   } catch (error) {
     console.error("Lỗi khi tạo bài hát:", error);
+
+    const topics = await Topic.find({
+      deleted: false,
+      status: "active",
+    }).select("title avatar");
+
+    const singers = await Singer.find({
+      deleted: false,
+      status: "active",
+    }).select("fullName avatar");
+
     return res.status(500).render("admin/pages/songs/create.pug", {
       pageTitle: "Tạo mới bài hát",
+      topics,
+      singers
     });
   }
 };

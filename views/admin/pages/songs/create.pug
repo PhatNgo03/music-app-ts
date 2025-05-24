@@ -68,6 +68,24 @@ block main
               type="button"
               style="display: none;"
             ) X
+      div(
+        class="form-group mb-3"
+        upload-audio
+      )
+        label(for="audio") File âm thanh
+        div.custom-file
+          label(for="audio" class="btn btn-secondary") Chọn tệp
+          input(
+            type="file"
+            class="form-control-file"
+            id="audio"
+            name="audio"
+            accept="audio/*"
+            upload-audio-input
+            style="display: none;"
+          )
+          audio(controls upload-audio-play style="display:none")
+            source(src="")
       div(class="form-group mb-3") 
         label(for="desc") Mô tả
         textarea(

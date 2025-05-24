@@ -9,16 +9,9 @@ validate.create = async (req: Request, res: Response, next: NextFunction) => {
     return res.status(400).json({ message: "Vui lòng nhập tiêu đề bài hát!" });
   }
 
-  if (!avatar || typeof avatar !== "string") {
-    return res.status(400).json({ message: "Ảnh đại diện không hợp lệ!" });
-  }
 
   if (!description || description.trim() === "") {
     return res.status(400).json({ message: "Vui lòng nhập mô tả bài hát!" });
-  }
-
-  if (!audio || typeof audio !== "string") {
-    return res.status(400).json({ message: "File audio không hợp lệ!" });
   }
 
   if (position !== undefined && isNaN(Number(position))) {
@@ -35,17 +28,8 @@ validate.edit = async (req: Request, res: Response, next: NextFunction) => {
     return res.status(400).json({ message: "Vui lòng nhập tiêu đề bài hát!" });
   }
 
-  if (!avatar || typeof avatar !== "string") {
-    return res.status(400).json({ message: "Ảnh đại diện không hợp lệ!" });
-  }
-
   if (!description || description.trim() === "") {
     return res.status(400).json({ message: "Vui lòng nhập mô tả bài hát!" });
-  }
-
-
-  if (!audio || typeof audio !== "string") {
-    return res.status(400).json({ message: "File audio không hợp lệ!" });
   }
 
   if (position !== undefined && isNaN(Number(position))) {

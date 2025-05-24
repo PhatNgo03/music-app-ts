@@ -27,6 +27,27 @@ if (uploadImage) {
 }
 // End Upload images
 
+
+//Upload audio
+const uploadAudio = document.querySelector("[upload-audio]");
+if (uploadAudio) {
+  const uploadAudioInput = document.querySelector("[upload-audio-input]");
+  const uploadAudioPlay = document.querySelector("[upload-audio-play]");
+  const source = uploadAudio.querySelector("source");
+
+  uploadAudioInput.addEventListener("change", (e) => {
+    if(e.target.files.length) {
+       const file = e.target.files[0];
+       const audio = URL.createObjectURL(file);
+
+       source.src =audio;
+       uploadAudioPlay.load();
+       uploadAudioPlay.style.display = "block";
+    }
+  });
+}
+// End Upload audio
+
 //Deleted item
 document.addEventListener("DOMContentLoaded", function () {
   const formDeleteItem = document.getElementById("form-delete-item");
