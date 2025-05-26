@@ -268,3 +268,75 @@ export const changeMulti = async (req: Request, res: Response) => {
 };
 
 
+
+// [GET] /admin/songs/edit/:"id"
+export const edit =  async(req: Request, res: Response) => {
+  try{
+  
+  const id = req.params.id;
+
+  const songs = await Song.findOne({
+    _id: id,
+    deleted : false
+  });
+  
+  const topics = await Topic.find({
+    deleted: false,
+  }).select("title avatar");
+
+  const singers = await Singer.find({
+    deleted: false,
+  }).select("fullName");
+
+  res.render("admin/pages/songs/edit", {
+    pageTitle: "Chỉnh sửa bài hát",
+    songs: songs,
+    topics: topics,
+    singers : singers
+  });
+  } catch(error){
+    res.redirect(`/${systemConfig.prefixAdmin}/songs`);
+  }
+};
+
+// [PATCH] /admin/songs/edit/:id
+export const editPatch = async (req: Request, res: Response) => {
+  const id = req.params.id;
+
+  try {
+    req.body.updatedBy = {
+      account_id: res.locals.user.id,
+      updatedAt: new Date()
+    };
+
+    if (req.body.position !== "") {
+      req.body.position = parseInt(req.body.position);
+    }
+    
+    req.body.avatar = Array.isArray(req.body.avatar) ? req.body.avatar[0] : req.body.avatar;
+    req.body.audio = Array.isArray(req.body.audio) ? req.body.audio[0] : req.body.audio;
+
+    await Song.updateOne(
+      { _id: id },
+      {
+        title: req.body.title,
+        topicId: req.body.topicId,
+        singerId: req.body.singerId,
+        description: req.body.description,
+        status: req.body.status,
+        avatar: req.body.avatar,
+        audio: req.body.audio,
+        position: req.body.position,
+        lyrics: req.body.lyrics,
+        $push: {
+          updatedBy: req.body.updatedBy
+        }
+      }
+    );
+
+    res.redirect(`/${systemConfig.prefixAdmin}/songs`);
+  } catch (error) {
+    console.error("Lỗi cập nhật bài hát:", error);
+    res.status(500).send("Đã có lỗi xảy ra khi cập nhật bài hát");
+  }
+};

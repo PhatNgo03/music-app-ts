@@ -1,12 +1,11 @@
 extends ../../layouts/default.pug
 
-
 block main
-  if(role.permissions.includes("songs_create"))
-    h1(class="mb-4") Thêm mới bài hát
+  if(role.permissions.includes("songs_edit"))
+    h1(class="mb-4") Chỉnh sửa bài hát
 
     form(
-      action=`/${prefixAdmin}/songs/create`
+      action=`/${prefixAdmin}/songs/edit/${songs._id}?_method=PATCH`
       method="POST"
       enctype="multipart/form-data"
     )
@@ -18,6 +17,7 @@ block main
           class="form-control"
           id="title"
           name="title"
+          value= songs.title
         )
       div(class="form-group mb-3") 
         label(for="topic" class="form-label mb-2") Chủ đề
@@ -28,7 +28,10 @@ block main
         )
           option(value="" disabled selected) -- Chọn chủ đề --
           each item in topics 
-            option(value=item.id) #{item.title}
+            option(
+              value=item.id
+              selected=(item.id.toString() == songs.topicId.toString() ? true : false)
+            ) #{item.title}
 
       div(class="form-group mb-3") 
         label(for="singer" class="form-label mb-2") Ca sĩ
@@ -39,7 +42,10 @@ block main
         )
           option(value="" disabled selected) -- Chọn ca sĩ --
           each item in singers 
-            option(value=item.id) #{item.fullName}
+            option(
+              value=item.id
+              selected=(item.id.toString() == songs.singerId.toString() ? true : false)
+            ) #{item.fullName}
       div.form-group.mb-3(upload-image)
         label(for="avatar") Ảnh
         div.custom-file
@@ -57,10 +63,9 @@ block main
             class="image-preview-container"
           )
             img(
-              src=""
+              src=songs.avatar
               upload-image-preview
               class="image-preview"
-              style="display: none;"
             )
             button.upload-image-remove(
               upload-image-remove
@@ -83,8 +88,8 @@ block main
             upload-audio-input
             style="display: none;"
           )
-          audio(controls upload-audio-play style="display:none")
-            source(src="")
+        audio(controls upload-audio-play)
+          source(src=songs.audio)
       div(class="form-group mb-3") 
         label(for="lyrics") Lời bài hát
         textarea(
@@ -92,6 +97,7 @@ block main
           id="lyrics"
           name="lyrics"
           rows="20"
+          value=songs.lyrics
           textarea-mce
         )
       div(class="form-group mb-3") 
@@ -101,6 +107,7 @@ block main
           id="desc"
           name="description"
           rows="5"
+          value=songs.description
           textarea-mce
         )
       div(class="form-group mb-3")
@@ -112,6 +119,7 @@ block main
           name="position"
           placeholder="Tự động tăng"
           min="1"
+          value=songs.position
         )  
     
       div(class="form-group form-check form-check-inline mb-3")
@@ -121,7 +129,7 @@ block main
             id="statusActive"
             name="status"
             value="active"
-            checked
+            checked=(songs.status == "active" ? true : false)
           ) 
           label(for="statusActive" class="form-check-label") Hoạt động
       div(class="form-group form-check form-check-inline mb-3")
@@ -131,6 +139,7 @@ block main
             id="statusInActive"
             name="status"
             value="inactive"
+            checked=(songs.status == "inactive" ? true : false)
           ) 
           label(for="statusInActive" class="form-check-label") Dừng Hoạt động
             
@@ -138,7 +147,7 @@ block main
         button(
           type="submit"
           class="btn btn-primary"
-        ) Tạo mới
+        ) Cập nhật
     script(src="/admin/js/script.js")
   else 
     h1 Không có quyền truy cập

@@ -3,15 +3,18 @@ import { Request, Response, NextFunction } from "express";
 const validate: any = {};
 
 validate.create = async (req: Request, res: Response, next: NextFunction) => {
-  const { title, avatar, description, audio, position } = req.body;
+  const { title, description, position, lyrics } = req.body;
 
   if (!title || title.trim() === "") {
     return res.status(400).json({ message: "Vui lòng nhập tiêu đề bài hát!" });
   }
 
-
   if (!description || description.trim() === "") {
     return res.status(400).json({ message: "Vui lòng nhập mô tả bài hát!" });
+  }
+
+  if (!lyrics || lyrics.trim() === "") {
+    return res.status(400).json({ message: "Vui lòng nhập lời bài hát!" });
   }
 
   if (position !== undefined && isNaN(Number(position))) {
@@ -22,7 +25,7 @@ validate.create = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 validate.edit = async (req: Request, res: Response, next: NextFunction) => {
-  const { title, avatar, description, singerId, topicId, audio, position } = req.body;
+  const { title, description, lyrics, position } = req.body;
 
   if (!title || title.trim() === "") {
     return res.status(400).json({ message: "Vui lòng nhập tiêu đề bài hát!" });
@@ -30,6 +33,10 @@ validate.edit = async (req: Request, res: Response, next: NextFunction) => {
 
   if (!description || description.trim() === "") {
     return res.status(400).json({ message: "Vui lòng nhập mô tả bài hát!" });
+  }
+
+  if (!lyrics || lyrics.trim() === "") {
+    return res.status(400).json({ message: "Vui lòng nhập lời bài hát!" });
   }
 
   if (position !== undefined && isNaN(Number(position))) {

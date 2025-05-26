@@ -53,7 +53,7 @@ export const detail = async (req: Request, res: Response) => {
       slug: slugSong,
       status: "active",
       deleted: false
-    }).select("title audio avatar singerId topicId description like lyrics");
+    }).select("title audio avatar singerId topicId description like lyrics listen");
 
     const singer = await Singer.findOne({
       _id: song?.singerId,

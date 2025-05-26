@@ -21,15 +21,18 @@ router.post("/create",
   controller.createPost
 )
 
-// router.get("/edit/:id", controller.edit);
+router.get("/edit/:id", controller.edit);
 
-// router.patch(
-//   "/edit/:id",
-//   uploadMiddleware.single("avatar"),
-//   uploadCloud.upload,
-//   validate.edit,
-//   controller.editPatch,
-//   );
+router.patch(
+  "/edit/:id",
+  uploadMiddleware.fields([
+    {name: "avatar", maxCount: 1 },
+    {name: "audio", maxCount: 1}
+  ]),
+  uploadCloud.uploadFields,
+  validate.edit,
+  controller.editPatch,
+  );
 
 // router.delete("/delete/:id", controller.deleteItem);
 
