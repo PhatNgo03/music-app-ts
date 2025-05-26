@@ -87,6 +87,15 @@ block main
           audio(controls upload-audio-play style="display:none")
             source(src="")
       div(class="form-group mb-3") 
+        label(for="lyrics") Lời bài hát
+        textarea(
+          class="form-control"
+          id="lyrics"
+          name="lyrics"
+          rows="20"
+          textarea-mce
+        )
+      div(class="form-group mb-3") 
         label(for="desc") Mô tả
         textarea(
           class="form-control"

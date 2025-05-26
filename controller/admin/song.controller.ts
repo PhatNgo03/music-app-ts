@@ -154,6 +154,7 @@ export const createPost = async (req: Request, res: Response) => {
         audio: req.body.audio,
         createdBy: req.body.createdBy,
         position: req.body.position,
+        lyrics: req.body.lyrics
     };
 
     const song = new Song(dataSong);

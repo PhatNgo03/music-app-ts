@@ -14,6 +14,8 @@ export const list = async (req: Request, res: Response) => {
       deleted: false
     });
     //Lấy ra danh sách các bài hát thuộc chủ đề 
+    const validSongs = [];
+
     const songs = await Song.find({
       topicId: topic?.id,
       status: "active",
@@ -26,12 +28,15 @@ export const list = async (req: Request, res: Response) => {
         status: "active",
         deleted: false
       }); 
-
+      if (infoSinger) {
       (song as any).infoSinger = infoSinger;
+      validSongs.push(song);
+      }
+
     }
     res.render("client/pages/songs/list.pug", {
       pageTitle: topic?.title,
-      songs: songs
+      songs: validSongs
     });
   } catch (error) {
     res.status(500).send("Server error");
