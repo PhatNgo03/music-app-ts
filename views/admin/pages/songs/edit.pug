@@ -97,9 +97,8 @@ block main
           id="lyrics"
           name="lyrics"
           rows="20"
-          value=songs.lyrics
           textarea-mce
-        )
+        ) #{songs.lyrics}   
       div(class="form-group mb-3") 
         label(for="desc") Mô tả
         textarea(
@@ -107,9 +106,8 @@ block main
           id="desc"
           name="description"
           rows="5"
-          value=songs.description
           textarea-mce
-        )
+        ) #{songs.description}   
       div(class="form-group mb-3")
         label(for="position") Vị trí
         input(
