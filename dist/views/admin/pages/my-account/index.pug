@@ -1,0 +1,37 @@
+extends ../../layouts/default.pug
+
+block main
+  h1(class="mb-4") Thông tin cá nhân
+  
+  if(user.avatar)
+    img(src=user.avatar width="150px" class="mb-3")
+  else
+    img(src="/admin/images/avatar.png" width="150px" class="mb-3")
+  if (user.fullName)
+    div(class="mb-3 d-flex align-items-center")
+      span(class="me-2 text-muted fw-bold") Họ tên:
+      b.text-dark #{user.fullName}
+  if (user.email)
+    div(class="mb-3 d-flex align-items-center")
+      span(class="me-2 text-muted fw-bold") Email:
+      b.text-dark #{user.email}
+  if (user.phone)
+    div(class="mb-3 d-flex align-items-center")
+      span(class="me-2 text-muted fw-bold") Số điện thoại:
+      b.text-dark #{user.phone}
+  if (user.status)
+    div(class="mb-3 d-flex align-items-center")
+      span(class="me-2 text-muted fw-bold") Trạng thái:
+      if (user.status === "active")
+        span(class="badge bg-success text-white") Hoạt động
+      else 
+        span(class="badge bg-danger text-white") Dừng Hoạt động
+  if (role.title)
+    div(class="mb-3 d-flex align-items-center")
+      span(class="me-2 text-muted fw-bold") Phân quyền:
+      b.text-dark #{role.title}
+  a(
+    href=`/${prefixAdmin}/my-account/edit`
+    class="btn btn-primary"
+  ) Chỉnh sửa thông tin cá nhân
+  script(src="/admin/js/product.js")

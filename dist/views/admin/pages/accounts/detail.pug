@@ -1,0 +1,85 @@
+extends ../../layouts/default.pug
+
+block main
+  if(role.permissions.includes("accounts_view"))
+    if (account.fullName)
+      h1(class="mb-4 text-primary border-bottom pb-2") #{account.fullName}
+
+    .card.shadow-lg.p-4.mb-4.bg-light.rounded
+      if (account.avatar)
+        div(class="mb-4")
+          img(
+            src=account.avatar
+            class="rounded shadow-sm"
+            style="width: 150px; border: 2px solid #ddd;"
+          )
+
+      div(class="mb-3 d-flex align-items-center")
+        span(class="me-2 text-muted fw-bold") Email:
+        span.text-dark #{account.email}
+
+      div(class="mb-3 d-flex align-items-center")
+        span(class="me-2 text-muted fw-bold") Trạng thái:
+        if (account.status === "active")
+          span(class="badge bg-success text-white") Hoạt động
+        else
+          span(class="badge bg-danger text-white") Không hoạt động
+
+      div(class="mb-3 d-flex align-items-center")
+        span(class="me-2 text-muted fw-bold") Vai trò:
+        if account.role_id && account.role_id.title
+          span.text-dark #{account.role_id.title}
+        else
+          span.text-muted Không xác định
+
+      div(class="mb-3 d-flex align-items-center")
+        span(class="me-2 text-muted fw-bold") Ngày tạo:
+        span.text-dark #{new Date(account.createdAt).toLocaleString()}
+
+      div(class="mb-3 d-flex align-items-center")
+        span(class="me-2 text-muted fw-bold") Ngày cập nhật:
+        span.text-dark #{new Date(account.updatedAt).toLocaleString()}
+      
+      div(class="mb-3 d-flex align-items-center")
+        span(class="me-2 text-muted fw-bold") Người tạo:
+        if account.accountFullName
+          span.text-dark
+            | #{account.accountFullName} 
+            if account.accountEmail
+              |  (#{account.accountEmail})
+        else
+          span.text-muted Không xác định
+      div(class="mb-3 d-flex align-items-center")
+        span(class="me-2 text-muted fw-bold") Cập nhật bởi:
+        if account.updatedBy && account.updatedBy.length
+          - const lastUpdated = account.updatedBy[account.updatedBy.length - 1]
+          span.text-dark
+            | #{lastUpdated.accountFullName || 'Không xác định'}
+            if lastUpdated.accountEmail
+              |  (#{lastUpdated.accountEmail})
+        else
+          span.text-muted Không xác định
+      
+      div(class="mb-3 d-flex align-items-center")
+        span(class="me-2 text-muted fw-bold") Người xóa:
+        if account.deletedBy && account.deletedBy.accountFullName
+          span.text-dark
+            | #{account.deletedBy.accountFullName}
+            if account.deletedBy.accountEmail
+              |  (#{account.deletedBy.accountEmail})
+        else
+          span.text-muted Không xác định
+
+      div(class="text-end mt-4")
+        a(
+          href=`/${prefixAdmin}/accounts/edit/${account._id}`
+          class="btn btn-warning btn-sm me-2"
+        ) Chỉnh sửa
+        a(
+          href=`/${prefixAdmin}/accounts`
+          class="btn btn-secondary btn-sm"
+        ) Quay lại
+
+    script(src="/admin/js/account.js")
+  else 
+    h1 Không có quyền truy cập!

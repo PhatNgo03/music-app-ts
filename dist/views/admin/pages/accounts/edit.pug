@@ -1,0 +1,115 @@
+extends ../../layouts/default.pug
+
+block main
+  if(role.permissions.includes("accounts_view"))
+    h1(class="mb-4") Chỉnh sửa tài khoản
+    if(roles)
+      form(
+        action=`/${prefixAdmin}/accounts/edit/${accounts._id}?_method=PATCH`
+        method="POST"
+        enctype="multipart/form-data"
+        id="form-edit-account"
+      )
+
+        div(class="form-group mb-3") 
+          label(for="fullName") Họ tên *
+          input(
+            type="text"
+            class="form-control"
+            id="fullName"
+            name="fullName"
+            value= accounts.fullName
+          )
+        div(class="form-group mb-3") 
+          label(for="email") Email *
+          input(
+            type="text"
+            class="form-control"
+            id="email"
+            name="email"
+            value= accounts.email
+            readonly
+          )
+        div(class="form-group mb-3") 
+          label(for="password") Mật khẩu *
+          input(
+            type="password"
+            class="form-control"
+            id="password"
+            name="password"
+            value = accounts.password
+          )    
+        div(class="form-group mb-3") 
+          label(for="phone") Số điện thoại
+          input(
+            type="text"
+            class="form-control"
+            id="phone"
+            name="phone"
+            value= accounts.phone
+        )   
+        div.form-group.mb-3(upload-image)
+            label(for="avatar") Avatar
+            div.custom-file
+              label(for="avatar" class="btn btn-secondary") Chọn tệp
+              input(
+                type="file"
+                class="form-control-file"
+                id="avatar"
+                name="avatar"
+                accept="image/*"
+                upload-image-input
+                style="display: none;"
+              )
+              div(
+                class="image-preview-container"
+              )
+                img(
+                  src=accounts.avatar
+                  upload-image-preview
+                  class="image-preview"
+                )
+                button.upload-image-remove(
+                  upload-image-remove
+                  type="button"
+                  style="display: none"
+                ) X
+        div(class="form-group mb-3")
+          label(for="role_id") Phân quyền 
+          select(name="role_id" id="role_id" class="form-select")
+            option(disabled) -- Chọn --
+              each item in roles
+                option(
+                  value=item.id
+                  selected=(item.id == accounts.role_id ? true : false)
+              ) #{item.title}
+        div(class="form-group mb-3")  
+          div(class="form-group form-check form-check-inline")
+            input(
+              type="radio"
+              class="form-check-input"
+              id="statusActive"
+              name="status"
+              value="active"
+              checked=(accounts.status == "active" ? true : false)
+            )
+            label(for="statusInActive" class="form-check-label") Hoạt động
+          div(class="form-group form-check form-check-inline")
+            input(
+              type="radio"
+              class="form-check-input"
+              id="statusInActive"
+              name="status"
+              value="inactive"
+                checked=(accounts.status == "inactive" ? true: false)
+            )
+            label(for="statusActive" class="form-check-label") Dừng Hoạt động
+        div(class="form-group mb-3")
+          button(
+            type="submit"
+            class="btn btn-primary"
+          ) Cập nhật
+      p 
+        a(href=`/${prefixAdmin}/roles/create` class="btn btn-secondary") Tạo nhóm quyền
+  else 
+   h1 Không có quyền truy cập!

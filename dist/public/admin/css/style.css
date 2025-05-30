@@ -1,0 +1,176 @@
+/* Header*/
+.header {
+  background: #202020;
+  padding: 10px 0;
+  position: sticky;
+  top: 0;
+  z-index: 999;
+}
+
+.header .inner-logo a {
+  font-size: 24px;
+  font-weight: 700;
+  color: #fff;
+  text-decoration: none;
+}
+
+/* End Header*/
+
+/* Body*/
+.body .sider {
+  width: 150px;
+  background: #323232;
+  color: #fff;
+  height: calc(100vh - 56px);
+  position: fixed;
+  top: 56px;
+  left: 0;
+}
+
+.body .main {
+  margin: 15px;
+  position: relative;
+  left: 150px;
+  width: calc(100% - 180px);
+}
+
+/*  End Body*/
+
+/* Sider */
+.sider .inner-menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sider .inner-menu ul li a {
+  color: #fff;
+  display: block;
+  padding: 6px 10px;
+  border-bottom: 1px solid #515151;
+  text-decoration: none;
+}
+
+.sider .inner-menu ul li a:hover {
+  text-decoration: underline;
+}
+
+/* Sider */
+
+.status-active {
+  color: #28a745; /* Active color */
+}
+
+.status-inactive {
+  color: #dc3545; /* Inactive color */
+}
+
+
+/* Các icon hành động dưới tiêu đề */
+.singer-detail .inner-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-size: 18px;
+  color: #666;
+  margin-bottom: 20px;
+}
+  /*like and dislike */
+.singer-detail .inner-actions .inner-like {
+  cursor: pointer;
+}
+.singer-detail .inner-actions .inner-like i {
+  color: #0059ff;
+}
+
+.singer-detail .inner-actions .inner-like.active{
+  cursor: pointer;
+  color: #0059ff;
+}
+.singer-detail .inner-actions .inner-like.active i {
+  font-weight: 900;
+}
+   /*favorite and unfavorite */
+.singer-detail .inner-actions .inner-heart {
+  cursor: pointer;
+}
+.singer-detail .inner-actions .inner-heart i {
+  color: #b90000;
+}
+
+.singer-detail .inner-actions .inner-heart.active{
+  cursor: pointer;
+  color: #b90000;
+}
+.singer-detail .inner-actions .inner-heart.active i {
+  font-weight: 900;
+}
+ 
+.singer-detail .inner-action {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* Phần phát nhạc (ảnh + audio) */
+.singer-detail .inner-play {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+.inner-avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 4px solid #f57f20;
+  animation: rotate 5s linear infinite;
+  /* animation-play-state: paused; */
+  margin-right: 20px;
+}
+
+.inner-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Mô tả và lời bài hát */
+.singer-detail .song-description,
+.singer-detail .song-lyrics {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 15px;
+  margin-bottom: 20px;
+}
+
+.singer-detail .song-description h5,
+.singer-detail .song-lyrics h5 {
+  font-size: 16px;
+  font-weight: 700;
+  color: #f57f20;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 8px;
+}
+
+.singer-detail .song-description p,
+.singer-detail .song-lyrics pre {
+  font-size: 14px;
+  margin: 0;
+  color: #333;
+  white-space: pre-wrap;
+}

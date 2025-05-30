@@ -1,0 +1,11 @@
+mixin select-tree(items, level, selected)
+  if items && items.length
+    each item in items
+      - var prefix = '--'.repeat(level)
+      - var currentItem = item._doc ? item._doc : item
+      option(
+        value=currentItem._id,
+        selected=(currentItem._id == selected ? true : false)
+      ) #{prefix} #{currentItem.title}
+      if currentItem.children && currentItem.children.length > 0
+        +select-tree(currentItem.children, level + 1, selected)

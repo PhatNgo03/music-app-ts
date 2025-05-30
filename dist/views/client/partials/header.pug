@@ -1,0 +1,51 @@
+header.header 
+  .container
+    .row.align-item-center 
+      .col-3 
+        .inner-logo
+          a(href="/")
+            img(src="/images/logo.svg", alt="Logo")
+      .col-4
+        .box-search
+          form(
+              action="/search/result"
+              method="GET"
+          )
+            div(class="form-group d-flex mb-0")
+                input(
+                    type="text"
+                    placeholder="Nhập từ khóa..."
+                    class="form-control"
+                    name="keyword"
+                    value= keyword
+                )
+                button(
+                    type="submit"
+                    class="btn btn-primary"
+                ) Tìm
+            .inner-suggest
+              .inner-list 
+                //- a(href=`/song/detail/:slugSong` class="inner-item")
+                //-   .inner-image 
+                //-     img(src="https://backend.daca.vn/assets/images/ngay-mai-nguoi-ta-lay-chong.jpg")
+                //-   .inner-info 
+                //-     .inner-title Cắt đôi nỗi sầu 
+                //-     .inner-singer 
+                //-       <i class="fa-solid fa-microphone-lines"></i> Tăng Duy Tân 
+
+      .col-5
+        .inner-menu 
+          ul 
+            li 
+              a(href="/", class="icon-link")
+                i.fas.fa-home
+                |  Trang chủ
+            li 
+              a(href="/topics", class="icon-link")
+                i.fas.fa-music.icon-music
+                |  Chủ đề
+            li 
+              a(href="/favorite-songs", class="icon-link")
+                i.fas.fa-heart.icon-favorite
+                |  Yêu Thích
+

@@ -1,0 +1,74 @@
+extends ../../layouts/default.pug
+
+block main
+  if(role.permissions.includes("singers_view"))
+    if (singer.fullName)
+      h1(class="mb-4 text-primary border-bottom pb-2") #{singer.fullName}
+
+    .card.shadow-lg.p-4.mb-4.bg-light.rounded
+      if (singer.avatar)
+        div(class="mb-4")
+          img(
+            src=singer.avatar
+            class="rounded shadow-sm"
+            style="width: 150px; border: 2px solid #ddd;"
+          )
+
+      div(class="mb-3 d-flex align-items-center")
+        span(class="me-2 text-muted fw-bold") Trạng thái:
+        if (singer.status === "active")
+          span(class="badge bg-success text-white") Hoạt động
+        else
+          span(class="badge bg-danger text-white") Không hoạt động
+
+      div(class="mb-3 d-flex align-items-center")
+        span(class="me-2 text-muted fw-bold") Ngày tạo:
+        span.text-dark #{new Date(singer.createdAt).toLocaleString()}
+
+      div(class="mb-3 d-flex align-items-center")
+        span(class="me-2 text-muted fw-bold") Ngày cập nhật:
+        span.text-dark #{new Date(singer.updatedAt).toLocaleString()}
+      
+      div(class="mb-3 d-flex align-items-center")
+        span(class="me-2 text-muted fw-bold") Người tạo:
+        if singer.accountFullName
+          span.text-dark
+            | #{singer.accountFullName} 
+            if singer.accountEmail
+              |  (#{singer.accountEmail})
+        else
+          span.text-muted Không xác định
+      div(class="mb-3 d-flex align-items-center")
+        span(class="me-2 text-muted fw-bold") Cập nhật bởi:
+        if singer.updatedBy && singer.updatedBy.length
+          - const lastUpdated = singer.updatedBy[singer.updatedBy.length - 1]
+          span.text-dark
+            | #{lastUpdated.accountFullName || 'Không xác định'}
+            if lastUpdated.accountEmail
+              |  (#{lastUpdated.accountEmail})
+        else
+          span.text-muted Không xác định
+      
+      div(class="mb-3 d-flex align-items-center")
+        span(class="me-2 text-muted fw-bold") Người xóa:
+        if singer.deletedBy && singer.deletedBy.accountFullName
+          span.text-dark
+            | #{singer.deletedBy.accountFullName}
+            if singer.deletedBy.accountEmail
+              |  (#{singer.deletedBy.accountEmail})
+        else
+          span.text-muted Không xác định
+
+      div(class="text-end mt-4")
+        a(
+          href=`/${prefixAdmin}/singers/edit/${singer._id}`
+          class="btn btn-warning btn-sm me-2"
+        ) Chỉnh sửa
+        a(
+          href=`/${prefixAdmin}/singers`
+          class="btn btn-secondary btn-sm"
+        ) Quay lại
+
+    script(src="/admin/js/account.js")
+  else 
+    h1 Không có quyền truy cập!
