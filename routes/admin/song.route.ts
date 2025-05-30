@@ -34,9 +34,9 @@ router.patch(
   controller.editPatch,
   );
 
-// router.delete("/delete/:id", controller.deleteItem);
+router.delete("/delete/:id", controller.deleteItem);
 
-// router.get("/detail/:id", controller.detail);
+router.get("/detail/:id", controller.detail);
 
 router.patch("/change-status/:status/:id", controller.changeStatus); 
 

@@ -55,6 +55,10 @@ export const detail = async (req: Request, res: Response) => {
       deleted: false
     }).select("title audio avatar singerId topicId description like lyrics listen");
 
+    if (song?.lyrics) {
+      (song as any).cleanedLyrics = song.lyrics.replace(/\[\d{2}:\d{2}(?:\.\d{2})?\]/g, "");
+    }
+    
     const singer = await Singer.findOne({
       _id: song?.singerId,
       deleted: false

@@ -8,7 +8,7 @@ import Song from "../../models/song.model";
 import Singer from "../../models/singer.model";
 import Topic from "../../models/topic.model";
 import { systemConfig } from "../../config/config";
-
+import dayjs from 'dayjs';
 
 // [GET] /admin/songs
 export const index = async (req: Request, res: Response) => {
@@ -338,5 +338,89 @@ export const editPatch = async (req: Request, res: Response) => {
   } catch (error) {
     console.error("Lỗi cập nhật bài hát:", error);
     res.status(500).send("Đã có lỗi xảy ra khi cập nhật bài hát");
+  }
+};
+
+// [DELETE] /admin/songs/delete/:id
+export const deleteItem = async (req: Request, res: Response) => {
+  const id = req.params.id;
+
+  await Song.updateOne(
+    {_id: id},
+    {
+      deleted: true,
+      deletedBy: {
+      account_id: res.locals.user.id,
+      deletedAt: new Date()
+    }
+    }, 
+  );
+
+ res.redirect(`/${systemConfig.prefixAdmin}/songs`);
+}
+
+// [GET] /admin/songs/detail/:id
+export const detail = async (req: Request, res: Response) => {
+  try {
+    const song = await Song.findOne({
+      _id: req.params.id,
+      deleted: false,
+    }).lean();
+    if (song?.lyrics) {
+      (song as any).cleanedLyrics = song.lyrics.replace(/\[\d{2}:\d{2}(?:\.\d{2})?\]/g, "");
+    }
+    
+    if (!song) {
+      res.redirect(`/${systemConfig.prefixAdmin}/songs`);
+    }
+
+    if (song?.createdBy?.account_id) {
+      const user = await Account.findById(song.createdBy.account_id).lean();
+      if (user) {
+        (song as any).accountFullName = user.fullName;
+        (song as any).accountEmail = user.email;
+      }
+    }
+
+    if (song?.deletedBy?.account_id) {
+      const deleter = await Account.findById(song.deletedBy.account_id).lean();
+      if (deleter) {
+        (song as any).deletedBy.accountFullName = deleter.fullName;
+        (song as any).deletedBy.accountEmail = deleter.email;
+      }
+    }
+
+    // Người cập nhật gần nhất
+    const updatedBy = song?.updatedBy?.slice(-1)[0];
+    if (updatedBy?.account_id) {
+      const userUpdated = await Account.findById(updatedBy.account_id).lean();
+      if (userUpdated) {
+        (updatedBy as any).accountFullName = userUpdated.fullName;
+        (updatedBy as any).accountEmail = userUpdated.email;
+      } else {
+        (updatedBy as any).updatedBy.accountFullName = "admin";
+        (updatedBy as any).updatedBy.accountEmail = "";
+      }
+    }
+
+    const singer = await Singer.findById(song?.singerId).lean();
+    const topic = await Topic.findById(song?.topicId).lean();
+
+    (song as any).singerName = singer?.fullName || "";
+    (song as any).topicTitle = topic?.title || "";
+
+    // Format ngày tạo để hiển thị
+    (song as any).createdAtFormatted = dayjs(song?.createdAt).format("D/M/YYYY");
+
+
+    res.render("admin/pages/songs/detail", {
+      pageTitle: song?.title,
+      song: song,
+      singer: singer,
+      topic: topic,  
+    });
+  } catch (error) {
+    console.error("Lỗi khi lấy chi tiết bài hát:", error);
+    res.redirect(`/${systemConfig.prefixAdmin}/songs`);
   }
 };

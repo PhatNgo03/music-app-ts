@@ -1,0 +1,81 @@
+extends ../../layouts/default.pug
+
+block main
+  if(role.permissions.includes("songs_view"))
+    .singer-detail
+      .container.my-3
+        .row
+          .col-12
+            .inner-title #{song.title}
+
+            .inner-actions
+              div(class="inner-action inner-time")
+                i.fa-regular.fa-clock
+                | #{song.createdAtFormatted || 'N/A'}
+
+              div(class="inner-action inner-singer")
+                i.fa-solid.fa-microphone-lines
+                | #{singer.fullName || 'Không rõ'}
+
+              div(class="inner-action inner-topic")
+                i.fa-solid.fa-music
+                | #{topic.title || 'Không rõ'}
+
+              div(class="inner-action inner-listen") 
+                i.fa-solid.fa-headphones
+                span #{song.listen || 0} lượt nghe
+
+              div(class="inner-action inner-like" button-like=song.id) 
+                i.fa-regular.fa-thumbs-up
+                span #{song.like || 0}
+
+              div(class=("inner-action inner-heart " + (song.isFavoriteSong ? "active" : "")) button-favorite=song.id)
+                i.fa-regular.fa-heart
+                | Bài hát yêu thích
+
+            .inner-play
+              .inner-avatar
+                img(src=singer.avatar || "/images/default-avatar.jpg", alt=singer.fullName)
+              .inner-audio
+                if song.audio
+                  audio(controls)
+                    source(src=song.audio, type="audio/mpeg")
+                    | Trình duyệt của bạn không hỗ trợ phát audio.
+                else
+                  p.text-muted Không có tệp audio
+
+            // Mô tả bài hát
+            .song-description.mt-4
+              h5 Mô tả
+              p!= song.description || 'Không có mô tả'
+
+            // Lời bài hát
+            .song-lyrics.mt-4
+              h5 Lời bài hát
+              if song.cleanedLyrics
+                pre(style="white-space: pre-wrap; background-color: #f8f9fa; padding: 10px; border-radius: 4px;")
+                  != song.cleanedLyrics
+              else
+                p.text-muted Không có lời bài hát
+
+            // Thông tin quản trị (nếu là trang admin)
+            if song.accountFullName
+              .admin-info.mt-4
+                h5 Thông tin quản trị
+                ul.list-group
+                  li.list-group-item
+                    strong Người tạo:
+                    |  #{song.accountFullName} (#{song.accountEmail || 'N/A'})
+                  if song.deletedBy && song.deletedBy.accountFullName
+                    li.list-group-item
+                      strong Người xóa:
+                      |  #{song.deletedBy.accountFullName} (#{song.deletedBy.accountEmail})
+                  if song.updatedBy && song.updatedBy.length
+                    - const latestUpdate = song.updatedBy[song.updatedBy.length - 1]
+                    if latestUpdate && latestUpdate.accountFullName
+                      li.list-group-item
+                        strong Người cập nhật gần nhất:
+                        |  #{latestUpdate.accountFullName} (#{latestUpdate.accountEmail})
+      script(src="/admin/js/script.js")
+  else 
+    h1 Không có quyền truy cập!
