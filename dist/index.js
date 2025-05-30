@@ -49,6 +49,7 @@ const index_route_2 = __importDefault(require("./routes/admin/index.route"));
 const config_1 = require("./config/config");
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const express_session_1 = __importDefault(require("express-session"));
+const serverless_http_1 = __importDefault(require("serverless-http"));
 const app = (0, express_1.default)();
 const port = process.env.PORT || 3000;
 app.set('views', path_1.default.join(__dirname, 'views'));
@@ -68,6 +69,4 @@ app.use((0, method_override_1.default)("_method"));
 (0, index_route_1.default)(app);
 (0, index_route_2.default)(app);
 app.use(express_1.default.static(`${__dirname}/public`));
-app.listen(port, () => {
-    console.log(`App listening on port ${port}`);
-});
+module.exports.handler = (0, serverless_http_1.default)(app);

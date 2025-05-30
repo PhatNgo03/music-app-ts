@@ -12,6 +12,9 @@ import { systemConfig } from "./config/config";
 
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
+
+import serverless from 'serverless-http';
+
 const app: Express = express();
 const port : number | string = process.env.PORT || 3000;
 
@@ -47,4 +50,4 @@ app.use(express.static(`${__dirname}/public`));
 app.listen(port, () => {
   console.log(`App listening on port ${port}`);
 });
-
+// module.exports.handler = serverless(app);
