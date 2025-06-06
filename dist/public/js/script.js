@@ -79,7 +79,18 @@ if(buttonLike){
       method: "PATCH"
     }
     fetch(link, option)
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) {
+          return res.json().then(error => {
+            if (error.code === 401) {
+              window.location.href = "/user/login";
+              return;
+            }
+            throw new Error(error.message || "Lỗi không xác định");
+          });
+        }
+        return res.json();
+      })
       .then(data => {
         if(data.code == 200){
           const span = buttonLike.querySelector("span");
@@ -106,7 +117,18 @@ if(listButtonFavorites.length > 0) {
       };
   
       fetch(link, option)
-        .then(res => res.json())
+        .then(res => {
+          if (!res.ok) {
+            return res.json().then(error => {
+              if (error.code === 401) {
+                window.location.href = "/user/login";
+                return;
+              }
+              throw new Error(error.message || "Lỗi không xác định");
+            });
+          }
+          return res.json();
+        })
         .then(data => {
           if(data.code == 200){
             button.classList.toggle("active");

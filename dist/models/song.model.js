@@ -16,9 +16,17 @@ const songSchema = new mongoose_1.default.Schema({
         type: Number,
         default: 0
     },
+    likeList: {
+        type: [String],
+        default: []
+    },
     listen: {
         type: Number,
         default: 0
+    },
+    listenList: {
+        type: [String],
+        default: []
     },
     position: Number,
     lyrics: String,
@@ -48,10 +56,10 @@ const songSchema = new mongoose_1.default.Schema({
         {
             account_id: String,
             updatedAt: Date
-        },
+        }
     ]
 }, {
-    timestamps: true,
+    timestamps: true
 });
 const Song = mongoose_1.default.model("Song", songSchema, "songs");
 exports.default = Song;

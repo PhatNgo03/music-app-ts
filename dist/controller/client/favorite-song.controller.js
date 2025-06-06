@@ -18,25 +18,29 @@ const song_model_1 = __importDefault(require("../../models/song.model"));
 const singer_model_1 = __importDefault(require("../../models/singer.model"));
 const index = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        const user = res.locals.user;
+        if (!user) {
+            return res.redirect("/auth/login");
+        }
         const favoriteSongs = yield favorite_song_model_1.default.find({
-            deleted: false
+            userId: user._id,
+            deleted: false,
         });
         for (const item of favoriteSongs) {
-            const infoSong = yield song_model_1.default.findOne({
-                _id: item.songId
-            });
-            const infoSinger = yield singer_model_1.default.findOne({
-                _id: infoSong === null || infoSong === void 0 ? void 0 : infoSong.singerId
-            });
+            const infoSong = yield song_model_1.default.findOne({ _id: item.songId });
+            if (!infoSong)
+                continue;
+            const infoSinger = yield singer_model_1.default.findOne({ _id: infoSong.singerId });
             item.infoSong = infoSong;
             item.infoSinger = infoSinger;
         }
         res.render("client/pages/favorite-songs/index", {
-            pageTitle: "Bài hát yêu thích ",
-            favoriteSongs: favoriteSongs
+            pageTitle: "Bài hát yêu thích",
+            favoriteSongs: favoriteSongs.filter((item) => item.infoSong),
         });
     }
     catch (error) {
+        console.error("Lỗi khi lấy danh sách bài hát yêu thích:", error);
         res.status(500).send("Server error");
     }
 });

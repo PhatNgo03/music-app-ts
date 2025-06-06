@@ -342,3 +342,10 @@ a.icon-link {
 }
 
 /* end box-search */
+
+.card img {
+  width: 100%;
+  height: auto;
+  max-height: 600px; 
+  object-fit: cover;
+}

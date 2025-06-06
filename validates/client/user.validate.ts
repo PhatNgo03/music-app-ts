@@ -7,10 +7,11 @@ export const register = (
   res: Response,
   next: NextFunction
 ): void => {
-  const { fullName, email, password } = req.body as {
+  const { fullName, email, password, confirmPassword  } = req.body as {
     fullName: string;
     email: string;
     password: string;
+    confirmPassword: string;
   };
 
   if (!fullName || typeof fullName !== 'string' || !fullName.trim()) {
@@ -48,6 +49,15 @@ export const register = (
     return;
   }
 
+  if (!confirmPassword || typeof confirmPassword !== 'string') {
+    res.status(400).json({ message: 'Vui lòng nhập lại mật khẩu!' });
+    return;
+  }
+  if (confirmPassword !== password) {
+    res.status(400).json({ message: 'Mật khẩu nhập lại không khớp!' });
+    return;
+  }
+
   next();
 };
 
@@ -59,7 +69,6 @@ export const login = (
 ): void => {
   const { email, password } = req.body;
 
-  // Kiểm tra xem email có tồn tại không và có định dạng hợp lệ không
   if (!email || typeof email !== 'string' || !email.trim()) {
     res.status(400).json({ message: 'Vui lòng nhập email!' });
     return;
@@ -69,7 +78,6 @@ export const login = (
     return;
   }
 
-  // Kiểm tra xem password có tồn tại không và có độ dài hợp lý không
   if (!password || typeof password !== 'string') {
    res.status(400).json({ message: 'Vui lòng nhập mật khẩu!' });
    return;
@@ -82,6 +90,5 @@ export const login = (
     res.status(400).json({ message: 'Mật khẩu tối đa 30 ký tự!' });
     return;
   }
-  // Nếu tất cả đều hợp lệ, chuyển sang tiếp theo
   next();
 };

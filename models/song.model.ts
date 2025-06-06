@@ -7,26 +7,39 @@ const songSchema = new mongoose.Schema(
   {
     title: String,
     avatar: String,
-    description : String,
+    description: String,
     singerId: String,
     topicId: String,
+
     like: {
       type: Number,
       default: 0
     },
+    likeList: {
+      type: [String],
+      default: []
+    },
+
     listen: {
       type: Number,
       default: 0
     },
+    listenList: {
+      type: [String],
+      default: []
+    },
+
     position: Number,
     lyrics: String,
     audio: String,
     status: String,
+
     slug: {
       type: String,
       slug: "title",
       unique: true
     },
+
     createdBy: {
       account_id: String,
       createdAt: {
@@ -34,23 +47,25 @@ const songSchema = new mongoose.Schema(
         default: Date.now
       }
     },
+
     deleted: {
-      type:Boolean,
-      default:false
+      type: Boolean,
+      default: false
     },
     deletedBy: {
       account_id: String,
-      deletedAt:Date
+      deletedAt: Date
     },
+
     updatedBy: [
-    {
-      account_id: String,
-      updatedAt:Date
-    },
+      {
+        account_id: String,
+        updatedAt: Date
+      }
     ]
   },
   {
-    timestamps: true,
+    timestamps: true
   }
 );
 

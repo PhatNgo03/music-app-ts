@@ -1,11 +1,11 @@
 header.header 
   .container
     .row.align-item-center 
-      .col-3 
+      .col-2
         .inner-logo
           a(href="/")
             img(src="/images/logo.svg", alt="Logo")
-      .col-4
+      .col-3
         .box-search
           form(
               action="/search/result"
@@ -33,19 +33,36 @@ header.header
                 //-     .inner-singer 
                 //-       <i class="fa-solid fa-microphone-lines"></i> Tăng Duy Tân 
 
-      .col-5
-        .inner-menu 
-          ul 
-            li 
-              a(href="/", class="icon-link")
-                i.fas.fa-home
+      .col-7
+        .inner-menu
+          ul.d-flex.align-items-center.justify-content-end.mb-0.list-unstyled
+            li.mr-3
+              a(href="/" class="icon-link d-flex.align-items-center")
+                i.fas.fa-home.mr-1
                 |  Trang chủ
-            li 
-              a(href="/topics", class="icon-link")
-                i.fas.fa-music.icon-music
+            li.mr-3
+              a(href="/topics" class="icon-link d-flex.align-items-center")
+                i.fas.fa-music.icon-music.mr-1
                 |  Chủ đề
-            li 
-              a(href="/favorite-songs", class="icon-link")
-                i.fas.fa-heart.icon-favorite
+            li.mr-3
+              a(href="/favorite-songs" class="icon-link d-flex.align-items-center")
+                i.fas.fa-heart.icon-favorite.mr-1
                 |  Yêu Thích
-
+            if (user)
+              li.mr-3
+              a(href="/user/info" class="icon-link d-flex.align-items-center")
+                i.fa-solid.fa-circle-user.mr-1
+                | #{user.fullName}
+              li
+                a(href="/user/logout" class="icon-link d-flex.align-items-center")
+                  i.fa-solid.fa-right-from-bracket.mr-1
+                  |  Đăng xuất
+            else 
+              li.mr-3
+                a(href="/user/register" class="icon-link d-flex.align-items-center")
+                  i.fas.fa-user-plus.mr-1
+                  |  Đăng ký
+              li
+                a(href="/user/login" class="icon-link d-flex.align-items-center")
+                  i.fas.fa-sign-in-alt.mr-1
+                  |  Đăng nhập

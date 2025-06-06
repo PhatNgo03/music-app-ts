@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.login = exports.register = void 0;
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const register = (req, res, next) => {
-    const { fullName, email, password } = req.body;
+    const { fullName, email, password, confirmPassword } = req.body;
     if (!fullName || typeof fullName !== 'string' || !fullName.trim()) {
         res.status(400).json({ message: 'Vui lòng nhập họ và tên!' });
         return;
@@ -34,6 +34,14 @@ const register = (req, res, next) => {
     }
     if (password.length > 30) {
         res.status(400).json({ message: 'Mật khẩu tối đa 30 ký tự!' });
+        return;
+    }
+    if (!confirmPassword || typeof confirmPassword !== 'string') {
+        res.status(400).json({ message: 'Vui lòng nhập lại mật khẩu!' });
+        return;
+    }
+    if (confirmPassword !== password) {
+        res.status(400).json({ message: 'Mật khẩu nhập lại không khớp!' });
         return;
     }
     next();

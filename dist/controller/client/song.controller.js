@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.listen = exports.favorite = exports.like = exports.detail = exports.list = void 0;
+exports.favorite = exports.like = exports.listen = exports.detail = exports.list = void 0;
 const topic_model_1 = __importDefault(require("../../models/topic.model"));
 const song_model_1 = __importDefault(require("../../models/song.model"));
 const singer_model_1 = __importDefault(require("../../models/singer.model"));
@@ -52,13 +52,16 @@ const list = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.list = list;
 const detail = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a, _b;
     try {
         const slugSong = req.params.slugSong;
+        const user = res.locals.user;
+        let isFavorite = false;
         const song = yield song_model_1.default.findOne({
             slug: slugSong,
             status: "active",
             deleted: false
-        }).select("title audio avatar singerId topicId description like lyrics listen");
+        }).select("title audio avatar singerId topicId description like lyrics listen likeList listenList");
         if (song === null || song === void 0 ? void 0 : song.lyrics) {
             song.cleanedLyrics = song.lyrics.replace(/\[\d{2}:\d{2}(?:\.\d{2})?\]/g, "");
         }
@@ -70,15 +73,27 @@ const detail = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             _id: song === null || song === void 0 ? void 0 : song.topicId,
             deleted: false
         }).select("title avatar description slug");
-        const favoriteSong = yield favorite_song_model_1.default.findOne({
-            songId: song === null || song === void 0 ? void 0 : song.id,
-        });
-        song.isFavoriteSong = favoriteSong ? true : false;
+        if (user && song) {
+            const favoriteSong = yield favorite_song_model_1.default.findOne({
+                songId: song.id,
+                userId: user._id,
+                deleted: false
+            });
+            isFavorite = !!favoriteSong;
+        }
+        song.isFavoriteSong = isFavorite;
+        let isLiked = false;
+        if (user && song) {
+            isLiked = (_b = (_a = song.likeList) === null || _a === void 0 ? void 0 : _a.includes(user._id.toString())) !== null && _b !== void 0 ? _b : false;
+        }
+        song.isLiked = isLiked;
         res.render("client/pages/songs/detail", {
             pageTitle: "Chi tiết bài hát",
             song,
             singer,
-            topic
+            topic,
+            isLiked,
+            isFavorite: isFavorite,
         });
     }
     catch (error) {
@@ -86,65 +101,6 @@ const detail = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.detail = detail;
-const like = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a, _b;
-    try {
-        const idSong = req.params.idSong;
-        const typeLike = req.params.typeLike;
-        const song = yield song_model_1.default.findOne({
-            _id: idSong,
-            status: "active",
-            deleted: false
-        });
-        const newLike = typeLike === "like" ? ((_a = song === null || song === void 0 ? void 0 : song.like) !== null && _a !== void 0 ? _a : 0) + 1 : ((_b = song === null || song === void 0 ? void 0 : song.like) !== null && _b !== void 0 ? _b : 0) - 1;
-        yield song_model_1.default.updateOne({
-            _id: idSong,
-        }, {
-            like: newLike
-        });
-        res.json({
-            code: 200,
-            message: "Like thành công!",
-            like: newLike
-        });
-    }
-    catch (error) {
-        res.status(500).send("Server error");
-    }
-});
-exports.like = like;
-const favorite = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const idSong = req.params.idSong;
-        const typeFavorite = req.params.typeFavorite;
-        switch (typeFavorite) {
-            case "favorite":
-                const existFavoriteSong = yield favorite_song_model_1.default.findOne({
-                    songId: idSong,
-                });
-                if (!existFavoriteSong) {
-                    const record = new favorite_song_model_1.default({
-                        songId: idSong
-                    });
-                    yield record.save();
-                }
-                break;
-            case "unfavorite":
-                yield favorite_song_model_1.default.deleteOne({
-                    songId: idSong
-                });
-                break;
-        }
-        res.json({
-            code: 200,
-            message: "Yêu thích bài hát thành công!",
-        });
-    }
-    catch (error) {
-        res.status(500).send("Server error");
-    }
-});
-exports.favorite = favorite;
 const listen = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     try {
@@ -174,3 +130,92 @@ const listen = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.listen = listen;
+const like = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const user = res.locals.user;
+        if (!user) {
+            res.status(401).json({
+                code: 401,
+                message: "Bạn cần đăng nhập để thực hiện hành động này."
+            });
+        }
+        const idSong = req.params.idSong;
+        const typeLike = req.params.typeLike;
+        const song = yield song_model_1.default.findOne({
+            _id: idSong,
+            status: "active",
+            deleted: false
+        });
+        let likeList = (song === null || song === void 0 ? void 0 : song.likeList) || [];
+        if (typeLike === "like") {
+            if (!likeList.includes(user._id.toString())) {
+                likeList.push(user._id.toString());
+            }
+        }
+        else if (typeLike === "dislike") {
+            likeList = likeList.filter(id => id !== user._id.toString());
+        }
+        else {
+            res.status(400).json({ code: 400, message: "Type like không hợp lệ" });
+        }
+        const newLikeCount = likeList.length;
+        yield song_model_1.default.updateOne({ _id: idSong }, {
+            like: newLikeCount,
+            likeList: likeList
+        });
+        res.json({
+            code: 200,
+            message: "Cập nhật like thành công",
+            like: newLikeCount
+        });
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).send("Server error");
+    }
+});
+exports.like = like;
+const favorite = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const user = res.locals.user;
+        if (!user) {
+            res.status(401).json({ code: 401, message: "Vui lòng đăng nhập để yêu thích bài hát" });
+        }
+        const idSong = req.params.idSong;
+        const typeFavorite = req.params.typeFavorite;
+        switch (typeFavorite) {
+            case "favorite":
+                const existFavoriteSong = yield favorite_song_model_1.default.findOne({
+                    songId: idSong,
+                    userId: user._id,
+                    deleted: false
+                });
+                if (!existFavoriteSong) {
+                    const record = new favorite_song_model_1.default({
+                        userId: user._id,
+                        songId: idSong,
+                        deleted: false
+                    });
+                    yield record.save();
+                }
+                break;
+            case "unfavorite":
+                yield favorite_song_model_1.default.deleteOne({
+                    songId: idSong,
+                    userId: user._id
+                });
+                break;
+            default:
+                res.status(400).json({ code: 400, message: "Type favorite không hợp lệ" });
+        }
+        res.json({
+            code: 200,
+            message: "Cập nhật yêu thích bài hát thành công"
+        });
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).send("Server error");
+    }
+});
+exports.favorite = favorite;

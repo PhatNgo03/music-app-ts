@@ -1,4 +1,6 @@
 // mot cach de add thu muc tĩnh vào trong (dist) ts để biên dịch qua js 
+
+//add package.json "scripts": { "build": "tsc && node copy-dir.js"}
 const fs = require("fs-extra");
 
 const listFolderCopy = [
