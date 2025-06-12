@@ -11,5 +11,5 @@
     "removeComments": true, //Xóa comment khi biên dịch sang file js
   },
   "include": ["**/*.ts"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "dist", "types"]
 }

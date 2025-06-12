@@ -1,0 +1,65 @@
+extends ../../layouts/default.pug
+include ../../mixins/box-head.pug
+
+block main
+  .container.my-3
+    .row
+      .col-12
+        +box-head(pageTitle)
+    .row.mt-4
+      .col-12
+        h5.text-primary.mb-3 Chủ đề
+        .d-flex.flex-wrap.gap-3
+          each topic in topics
+            a(
+              href=`/songs/${topic.slug}`
+              class="d-flex align-items-center gap-2 border p-2 rounded"
+              style="text-decoration: none; color: inherit;"
+            )
+              img(src=topic.avatar, alt=topic.title, width="80", height="80", class="rounded-circle object-fit-cover")
+              span= topic.title
+        a.btn.btn-link.mt-2(href="/topics") Xem thêm
+    .row.mt-5
+      .col-12
+        h5.text-primary.mb-3 Top 10 bài hát nhiều like nhất
+        .row
+          each song in topLikedSongs
+            .col-md-3.col-sm-4.col-6.mb-3
+              a(href=`/songs/detail/${song.slug}`, style="text-decoration: none; color: inherit;")
+                .card.h-100.shadow-sm
+                  .d-flex.flex-row.align-items-center.p-2
+                    img(
+                      src=song.avatar || "/images/default-song.jpg",
+                      alt=song.title,
+                      style="width: 60px; height: 60px; object-fit: cover; border-radius: 6px;"
+                    )
+                    .ms-2
+                      h6.mb-1.text-truncate(style="max-width: 140px;")= song.title
+                      .d-flex.align-items-center.text-muted(style="font-size: 0.85rem;")
+                        i.fas.fa-microphone.me-1(style="color: purple;")
+                        | #{song.singer ? song.singer.fullName : "Không rõ"}
+                      .d-flex.align-items-center.text-muted(style="font-size: 0.85rem;")
+                        i.fas.fa-thumbs-up.me-1.text-danger
+                        | #{song.like} 
+    .row.mt-5
+      .col-12
+        h5.text-warning.mb-3 Top 10 bài hát nhiều lượt nghe nhất
+        .row
+          each song in topViewedSongs
+            .col-md-3.col-sm-4.col-6.mb-3
+              a(href=`/songs/detail/${song.slug}`, style="text-decoration: none; color: inherit;")
+                .card.h-100.shadow-sm
+                  .d-flex.flex-row.align-items-center.p-2
+                    img(
+                      src=song.avatar || "/images/default-song.jpg",
+                      alt=song.title,
+                      style="width: 60px; height: 60px; object-fit: cover; border-radius: 6px;"
+                    )
+                    .ms-2
+                      h6.mb-1.text-truncate(style="max-width: 140px;")= song.title
+                      .d-flex.align-items-center.text-muted(style="font-size: 0.85rem;")
+                        i.fas.fa-microphone.me-1(style="color: purple;")
+                        | #{song.singer ? song.singer.fullName : "Không rõ"}
+                      .d-flex.align-items-center.text-muted(style="font-size: 0.85rem;")
+                        i.fas.fa-eye.me-1.text-info
+                        | #{song.listen} 👁️
