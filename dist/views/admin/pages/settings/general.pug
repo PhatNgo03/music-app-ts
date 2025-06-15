@@ -1,0 +1,90 @@
+extends ../../layouts/default.pug
+
+block main
+  if(role.permissions.includes("settings_create"))
+    h1(class="mb-4") Cài đặt chung
+
+    form(
+      action=`/${prefixAdmin}/settings/general?_method=PATCH`
+      method="POST"
+      enctype="multipart/form-data"
+    )
+
+      div(class="form-group mb-3") 
+        label(for="websiteName") Tên website 
+        input(
+          type="text"
+          class="form-control"
+          id="websiteName"
+          name="websiteName"
+          value=(settingGeneral ?  settingGeneral.websiteName : "")
+        )
+      div.form-group.mb-3(upload-image)
+          label(for="logo") Logo
+          div.custom-file
+            label(for="logo" class="btn btn-secondary") Chọn tệp
+            input(
+              type="file"
+              class="form-control-file"
+              id="logo"
+              name="logo"
+              accept="image/*"
+              upload-image-input
+              style="display: none;"
+            )
+            div(
+              class="image-preview-container"
+            )
+              img(
+                src=(settingGeneral ?  settingGeneral.logo : "")
+                upload-image-preview
+                class="image-preview"
+                style="display: none;"
+              )
+              button.upload-image-remove(
+                upload-image-remove
+                type="button"
+                style="display: none;"
+              ) X
+      div(class="form-group mb-3") 
+          label(for="phone") Số điện thoại
+          input(
+            type="text"
+            class="form-control"
+            id="phone"
+            name="phone"
+            value=(settingGeneral ?  settingGeneral.phone : "")
+          )
+      div(class="form-group mb-3")
+        label(for="email") Email
+        input(
+          type="text"
+          class="form-control"
+          id="email"
+          name="email"
+          value=(settingGeneral ?  settingGeneral.email : "")
+        )
+      div(class="form-group mb-3")
+          label(for="address") Địa chỉ
+          input(
+            type="text"
+            class="form-control"
+            id="address"
+            name="address"
+            value=(settingGeneral ?  settingGeneral.address : "")
+          )
+      div(class="form-group mb-3")
+          label(for="copyright") Copyright
+          input(
+            type="text"
+            class="form-control"
+            id="copyright"
+            name="copyright"
+            value=(settingGeneral ?  settingGeneral.copyright : "")
+          )    
+      div(class="form-group mb-3")
+        button(
+          type="submit"
+          class="btn btn-primary"
+        ) Cập nhật
+    script(src="/admin/js/script.js")

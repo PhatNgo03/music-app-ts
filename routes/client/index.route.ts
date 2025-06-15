@@ -6,10 +6,12 @@ import { searchRoutes } from "../client/search.route";
 import { userRoutes } from "./user.route";
 import { homeRoutes } from "./home.route";
 import { infoUser } from "../../middlewares/client/user.middleware";
-
+import { settingGeneral } from "../../middlewares/client/setting.middleware";
 const clientRoutes = (app: Express): void => {
   
   app.use("/", homeRoutes);
+
+  app.use(settingGeneral);
 
   app.use(`/topics`,infoUser, topicRoutes);
 
