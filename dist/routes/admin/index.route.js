@@ -45,6 +45,7 @@ const my_account_route_1 = require("./my-account.route");
 const song_route_1 = require("./song.route");
 const upload_route_1 = require("./upload.route");
 const setting_route_1 = require("./setting.route");
+const users_route_1 = require("./users.route");
 const adminRoutes = (app) => {
     const PATH_ADMIN = `/${config_1.systemConfig.prefixAdmin}`;
     app.use(`${PATH_ADMIN}/dashboard`, authMiddleWare.requireAuth, dashboard_route_1.dashboardRoutes);
@@ -55,6 +56,7 @@ const adminRoutes = (app) => {
     app.use(PATH_ADMIN + "/my-account", authMiddleWare.requireAuth, my_account_route_1.myAccountRouters);
     app.use(PATH_ADMIN + "/songs", authMiddleWare.requireAuth, song_route_1.songRoutes);
     app.use(PATH_ADMIN + "/upload", authMiddleWare.requireAuth, upload_route_1.uploadRoutes);
+    app.use(PATH_ADMIN + "/users", authMiddleWare.requireAuth, users_route_1.userRoutes);
     app.use(PATH_ADMIN + "/settings", authMiddleWare.requireAuth, setting_route_1.settingRoutes);
     app.use(PATH_ADMIN + "/auth", auth_route_1.authRoutes);
 };

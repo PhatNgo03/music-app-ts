@@ -9,8 +9,8 @@ const home_route_1 = require("./home.route");
 const user_middleware_1 = require("../../middlewares/client/user.middleware");
 const setting_middleware_1 = require("../../middlewares/client/setting.middleware");
 const clientRoutes = (app) => {
-    app.use("/", home_route_1.homeRoutes);
     app.use(setting_middleware_1.settingGeneral);
+    app.use("/", home_route_1.homeRoutes);
     app.use(`/topics`, user_middleware_1.infoUser, topic_route_1.topicRoutes);
     app.use(`/songs`, user_middleware_1.infoUser, song_route_1.songRoutes);
     app.use(`/favorite-songs`, user_middleware_1.infoUser, favorite_song_route_1.favoriteSongRoutes);

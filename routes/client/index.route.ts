@@ -9,9 +9,9 @@ import { infoUser } from "../../middlewares/client/user.middleware";
 import { settingGeneral } from "../../middlewares/client/setting.middleware";
 const clientRoutes = (app: Express): void => {
   
-  app.use("/", homeRoutes);
-
   app.use(settingGeneral);
+
+  app.use("/", homeRoutes);
 
   app.use(`/topics`,infoUser, topicRoutes);
 
