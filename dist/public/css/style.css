@@ -29,6 +29,17 @@
   color: inherit;
 }
 
+.logo-img {
+  height: 120px;
+  width: auto;
+  object-fit: contain;
+}
+
+.inner-logo {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
 
 /* End Header */
 

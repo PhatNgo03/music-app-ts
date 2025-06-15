@@ -20,7 +20,7 @@ const index = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const user = res.locals.user;
         if (!user) {
-            return res.redirect("/auth/login");
+            return res.redirect("/user/login");
         }
         const favoriteSongs = yield favorite_song_model_1.default.find({
             userId: user._id,

@@ -9,7 +9,7 @@ export const index = async (req: Request, res: Response) => {
     const user = res.locals.user;
 
     if (!user) {
-      return res.redirect("/auth/login"); 
+      return res.redirect("/user/login"); 
     }
 
     const favoriteSongs = await FavoriteSong.find({
